@@ -41,16 +41,66 @@ double price = 19.99;
 int wholePart = (int) price; // narrowing: truncates to 19, does NOT round
 ```
 
+## Wrapper classes and autoboxing
+Every primitive type has a corresponding **wrapper class** — an object version of it: `int` → `Integer`, `double` → `Double`, `char` → `Character`, `boolean` → `Boolean`, and so on. Wrapper classes exist because primitives can't be used where an object is required — for example, the generic collections you'll meet later (`List<Integer>`) can't hold a raw `int`.
+
+```java
+int primitive = 42;
+Integer boxed = primitive;       // autoboxing: primitive -> wrapper, automatic
+int backToPrimitive = boxed;     // unboxing: wrapper -> primitive, automatic
+```
+
+This automatic conversion is called **autoboxing** (primitive to wrapper) and **unboxing** (wrapper to primitive). It's convenient, but it has a real cost: a wrapper is a full object on the heap, not a few bytes on the stack, so autoboxing inside a tight loop can noticeably hurt performance. Wrapper classes also carry useful static helpers, e.g. `Integer.parseInt("42")` to convert a `String` to an `int`, and `Integer.MAX_VALUE` / `Integer.MIN_VALUE` for the type's limits.
+
+## Type inference with `var`
+Since Java 10, you can let the compiler infer a local variable's type from the value you assign, using `var` instead of the explicit type:
+
+```java
+var count = 10;          // inferred as int
+var name = "Kaushik";    // inferred as String
+var price = 19.99;       // inferred as double
+```
+
+`var` is still statically typed — the compiler locks in the inferred type at compile time, it just saves you from writing it out. It only works for local variables with an initializer; you can't write `var x;` with no value, because there'd be nothing to infer from.
+
+## Characters are numbers underneath
+A `char` is really a 16-bit unsigned integer holding a Unicode code point, so it supports arithmetic directly:
+
+```java
+char letter = 'A';
+int code = letter;        // widening: char -> int, gives 65
+char next = (char) (letter + 1); // narrowing back to char gives 'B'
+```
+
+This is how alphabet-shifting logic (like a Caesar cipher) works under the hood — you're just doing integer math on the underlying code points.
+
+## Readable numeric literals and constants
+Java lets you use underscores inside numeric literals purely for readability — the compiler ignores them:
+```java
+int million = 1_000_000; // identical to 1000000
+long creditCardNumber = 1234_5678_9012_3456L;
+```
+
+Use `final` to declare a constant — a variable whose value can never be reassigned after initialization:
+```java
+final double TAX_RATE = 0.08;
+// TAX_RATE = 0.09; // compile error: cannot assign a value to final variable
+```
+
 ## Key points
 - Java has no automatic conversion between unrelated types (e.g. you can't assign a `String` to an `int` without parsing it).
 - Narrowing casts truncate for floating-point-to-integer conversions — `(int) 19.99` gives `19`, not `20`.
 - `float` and `double` cannot represent every decimal value exactly (binary floating point), which is why financial calculations typically avoid them.
 - Variables declared inside a method (local variables) are not automatically initialized — you must assign a value before using one, or the compiler will reject the code.
+- Autoboxing/unboxing is automatic but not free — it allocates a wrapper object, which matters in performance-sensitive code.
+- `var` only affects how you *write* the declaration; the variable's type is still fixed at compile time.
 
 ## Common pitfalls
 - Forgetting the `L` suffix on a long literal that's too big for `int` (`long x = 3000000000;` fails to compile — it needs `3000000000L`).
 - Assuming narrowing casts round; they truncate toward zero.
 - Comparing `float`/`double` values with `==` and expecting exact equality — rounding error can make `0.1 + 0.2 == 0.3` evaluate to `false`.
+- Comparing two boxed `Integer` objects with `==` instead of `.equals()` — for values outside -128 to 127, `==` compares references, not numeric value, and can silently give `false` for equal numbers.
+- Trying to cast a `boolean` to or from any numeric type — Java doesn't allow it at all, unlike C.
 
 ## Try it yourself
 See `src/day02/VariablesDemo.java`.
