@@ -70,5 +70,27 @@ public class VariablesDemo {
         final double TAX_RATE = 0.08;
         System.out.println("\n1_000_000 = " + million);
         System.out.println("TAX_RATE (final, cannot be reassigned) = " + TAX_RATE);
+
+        // Primitive narrowing casts never throw -- they silently overflow instead
+        long tooBig = 5_000_000_000L;
+        int overflowed = (int) tooBig;
+        System.out.println("\n(int) 5_000_000_000L = " + overflowed + " (silent overflow, no exception)");
+
+        // NumberFormatException: thrown when parsing text that isn't a valid number
+        try {
+            int value = Integer.parseInt("not a number");
+            System.out.println("Parsed: " + value);
+        } catch (NumberFormatException e) {
+            System.out.println("Caught NumberFormatException: " + e.getMessage());
+        }
+
+        // ClassCastException: thrown when a reference-type cast is invalid at runtime
+        Object obj = "a String, not a number";
+        try {
+            Integer number = (Integer) obj;
+            System.out.println("Cast succeeded: " + number);
+        } catch (ClassCastException e) {
+            System.out.println("Caught ClassCastException: " + e.getMessage());
+        }
     }
 }
