@@ -34,5 +34,41 @@ public class VariablesDemo {
         double b = 0.2;
         System.out.println("\n0.1 + 0.2 == 0.3 ? " + (a + b == 0.3));
         System.out.println("Actual value of 0.1 + 0.2: " + (a + b));
+
+        // Wrapper classes and autoboxing/unboxing
+        int primitive = 42;
+        Integer boxed = primitive;         // autoboxing
+        int backToPrimitive = boxed;       // unboxing
+        System.out.println("\nAutoboxed int -> Integer: " + boxed);
+        System.out.println("Unboxed Integer -> int: " + backToPrimitive);
+        System.out.println("Integer.parseInt(\"123\") = " + Integer.parseInt("123"));
+        System.out.println("Integer.MAX_VALUE = " + Integer.MAX_VALUE);
+
+        // The == vs equals() trap with boxed values outside the -128..127 cache range
+        Integer boxedA = 200;
+        Integer boxedB = 200;
+        System.out.println("\nboxedA == boxedB (200, 200): " + (boxedA == boxedB) + " (reference comparison)");
+        System.out.println("boxedA.equals(boxedB): " + boxedA.equals(boxedB) + " (value comparison)");
+
+        // var type inference
+        var count = 10;
+        var name = "Kaushik";
+        var pricePerItem = 19.99;
+        System.out.println("\nvar count = " + count + " (inferred as int)");
+        System.out.println("var name = " + name + " (inferred as String)");
+        System.out.println("var pricePerItem = " + pricePerItem + " (inferred as double)");
+
+        // Characters are numbers underneath
+        char ch = 'A';
+        int code = ch;
+        char next = (char) (ch + 1);
+        System.out.println("\n'A' as int: " + code);
+        System.out.println("'A' + 1, cast back to char: " + next);
+
+        // Readable numeric literals and constants
+        int million = 1_000_000;
+        final double TAX_RATE = 0.08;
+        System.out.println("\n1_000_000 = " + million);
+        System.out.println("TAX_RATE (final, cannot be reassigned) = " + TAX_RATE);
     }
 }
