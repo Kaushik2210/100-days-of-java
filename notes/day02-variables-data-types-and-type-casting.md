@@ -87,6 +87,38 @@ final double TAX_RATE = 0.08;
 // TAX_RATE = 0.09; // compile error: cannot assign a value to final variable
 ```
 
+## Exception handling basics for narrowing casts
+Here's the part that surprises people coming from other languages: **a primitive narrowing cast never throws an exception, no matter how much data it loses.** `(int) 3000000000.5` doesn't crash — it just silently produces the wrong number. The compiler requires you to write the cast explicitly precisely because it's your way of telling Java "I know this might lose information, do it anyway."
+
+```java
+long tooBig = 5_000_000_000L;
+int overflowed = (int) tooBig; // silently wraps around to a nonsense negative number
+System.out.println(overflowed); // 705032704 — no exception, no warning
+```
+
+So if primitive casts don't throw, where does exception handling actually come in for type conversion? Two places:
+
+**1. Parsing a `String` into a number can throw `NumberFormatException`** — this isn't a cast at all, it's `Integer.parseInt`/`Double.parseDouble` trying to interpret text, and it fails loudly if the text isn't a valid number:
+```java
+try {
+    int value = Integer.parseInt("not a number");
+} catch (NumberFormatException e) {
+    System.out.println("Couldn't parse that as an int: " + e.getMessage());
+}
+```
+
+**2. Casting one reference type to an incompatible one throws `ClassCastException`** at runtime — this is the reference-type equivalent of a narrowing cast, and unlike primitives, Java *does* check it and fails loudly:
+```java
+Object value = "a String, not a number";
+try {
+    Integer number = (Integer) value; // compiles fine, blows up at runtime
+} catch (ClassCastException e) {
+    System.out.println("Cannot cast that Object to Integer: " + e.getMessage());
+}
+```
+
+The `try`/`catch` block lets the program recover instead of crashing: code inside `try` runs normally until something throws; if the matching exception type is thrown, execution jumps straight to the matching `catch` block instead of terminating the program.
+
 ## Key points
 - Java has no automatic conversion between unrelated types (e.g. you can't assign a `String` to an `int` without parsing it).
 - Narrowing casts truncate for floating-point-to-integer conversions — `(int) 19.99` gives `19`, not `20`.
@@ -94,6 +126,7 @@ final double TAX_RATE = 0.08;
 - Variables declared inside a method (local variables) are not automatically initialized — you must assign a value before using one, or the compiler will reject the code.
 - Autoboxing/unboxing is automatic but not free — it allocates a wrapper object, which matters in performance-sensitive code.
 - `var` only affects how you *write* the declaration; the variable's type is still fixed at compile time.
+- Primitive narrowing casts fail silently (wrong value, no exception); reference-type casts and `String` parsing fail loudly (an exception you can catch).
 
 ## Common pitfalls
 - Forgetting the `L` suffix on a long literal that's too big for `int` (`long x = 3000000000;` fails to compile — it needs `3000000000L`).
@@ -101,6 +134,8 @@ final double TAX_RATE = 0.08;
 - Comparing `float`/`double` values with `==` and expecting exact equality — rounding error can make `0.1 + 0.2 == 0.3` evaluate to `false`.
 - Comparing two boxed `Integer` objects with `==` instead of `.equals()` — for values outside -128 to 127, `==` compares references, not numeric value, and can silently give `false` for equal numbers.
 - Trying to cast a `boolean` to or from any numeric type — Java doesn't allow it at all, unlike C.
+- Assuming a primitive narrowing cast will throw if the value overflows — it won't; you have to range-check manually before casting if that matters.
+- Forgetting to wrap `Integer.parseInt` in a `try`/`catch` when the input comes from outside the program (user input, a file, a network request) — untrusted text is never guaranteed to be a valid number.
 
 ## Try it yourself
 See `src/day02/VariablesDemo.java`.
