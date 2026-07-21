@@ -40,6 +40,21 @@ public class OperatorsDemo {
         int max = (p > q) ? p : q;
         System.out.println("max(7, 3) = " + max);
 
+        // Bitwise operators
+        System.out.println("\n=== Bitwise ===");
+        int m = 6;   // 0110
+        int n = 3;   // 0011
+        System.out.println("6 & 3 = " + (m & n));
+        System.out.println("6 | 3 = " + (m | n));
+        System.out.println("6 ^ 3 = " + (m ^ n));
+        System.out.println("~6 = " + (~m) + " (two's complement: ~x == -x - 1)");
+
+        // Shift operators
+        System.out.println("\n=== Shift ===");
+        System.out.println("4 << 2 = " + (4 << 2));
+        System.out.println("-8 >> 1 = " + (-8 >> 1) + " (sign-preserving)");
+        System.out.println("-8 >>> 1 = " + (-8 >>> 1) + " (zero-filled, ignores sign)");
+
         // Operator precedence
         System.out.println("\n=== Precedence ===");
         int result = 2 + 3 * 4;
