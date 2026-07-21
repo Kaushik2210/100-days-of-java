@@ -87,11 +87,59 @@ int max = (a > b) ? a : b;
 Nesting ternaries is possible but hurts readability fast; one level is
 usually the practical limit.
 
+## Bitwise operators
+
+`&  |  ^  ~` operate on the individual bits of integer types.
+
+- `&` (AND) — bit is 1 only if both operand bits are 1.
+- `|` (OR) — bit is 1 if either operand bit is 1.
+- `^` (XOR) — bit is 1 if exactly one operand bit is 1.
+- `~` (NOT) — flips every bit, including the sign bit.
+
+```java
+int a = 6;   // 0110
+int b = 3;   // 0011
+System.out.println(a & b);   // 0010 -> 2
+System.out.println(a | b);   // 0111 -> 7
+System.out.println(a ^ b);   // 0101 -> 5
+System.out.println(~a);      // -7 (bitwise NOT flips the sign bit too)
+```
+
+`~a` is `-7`, not `-6` or `9` — because Java integers are stored in two's
+complement, flipping every bit of `6` gives `-(6 + 1)`. This trips people up
+the first time they see it: `~x` is always `-x - 1`.
+
+A common real use of `&` is checking a single flag bit without an if-chain:
+`if ((flags & MASK) != 0) { ... }`.
+
+## Shift operators
+
+`<<  >>  >>>` shift the bits of an integer left or right.
+
+- `<<` (left shift) — shifts bits left, filling with zeros. Equivalent to
+  multiplying by `2^n` (for values that don't overflow).
+- `>>` (signed right shift) — shifts bits right, filling with the sign bit
+  (so negative numbers stay negative). Equivalent to dividing by `2^n`,
+  rounding toward negative infinity.
+- `>>>` (unsigned right shift) — shifts bits right, always filling with
+  zeros, regardless of sign. Only meaningfully different from `>>` on
+  negative numbers.
+
+```java
+System.out.println(4 << 2);     // 16  (4 * 2^2)
+System.out.println(-8 >> 1);    // -4  (sign-preserving)
+System.out.println(-8 >>> 1);   // a large positive number (sign bit is zero-filled)
+```
+
+`>>>` has no meaning for `long` vs zero-vs-negative confusion once you
+remember: it never cares about the sign, `>>` always does.
+
 ## Operator precedence
 
-Java evaluates `*`, `/`, `%` before `+`, `-`; comparisons before `&&`/`||`;
-and assignment last. When in doubt, use parentheses — they cost nothing and
-remove ambiguity for the next reader.
+Java evaluates `*`, `/`, `%` before `+`, `-`; shift operators before
+relational operators; comparisons before `&`, `^`, `|`; and those before
+`&&`/`||`; assignment is last. When in doubt, use parentheses — they cost
+nothing and remove ambiguity for the next reader.
 
 ```java
 int result = 2 + 3 * 4;       // 14, not 20
@@ -106,6 +154,9 @@ int clearer = 2 + (3 * 4);    // same value, clearer intent
 - Compound assignment operators (`+=` etc.) insert an implicit narrowing
   cast — they are not pure shorthand for the longhand expression.
 - `&&`/`||` short-circuit; `&`/`|` on booleans do not.
+- `~x` equals `-x - 1` because of two's complement — it is not just "flip
+  the digits" in the everyday sense.
+- `>>` preserves sign, `>>>` always zero-fills regardless of sign.
 - Prefer explicit parentheses over relying on precedence rules from memory.
 
 ## Common pitfalls
@@ -116,9 +167,11 @@ int clearer = 2 + (3 * 4);    // same value, clearer intent
 - Chaining `==` for `String` comparison (covered on Day 2's wrapper-class
   section) — the same reference-vs-value trap applies to operator misuse
   more broadly.
+- Reaching for `>>` when `>>>` is what's actually needed (e.g. hashing code
+  that must not care about sign).
 
 ## Try it yourself
 
 Run [`OperatorsDemo.java`](../src/day03/OperatorsDemo.java) and predict each
-line of output before running it — especially the division, modulo, and
-increment sections.
+line of output before running it — especially the division, modulo,
+increment, and bitwise/shift sections.
