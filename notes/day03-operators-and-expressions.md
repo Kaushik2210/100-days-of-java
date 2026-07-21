@@ -134,12 +134,50 @@ System.out.println(-8 >>> 1);   // a large positive number (sign bit is zero-fil
 `>>>` has no meaning for `long` vs zero-vs-negative confusion once you
 remember: it never cares about the sign, `>>` always does.
 
+## The instanceof operator
+
+`instanceof` checks whether an object is an instance of a given type at
+runtime, producing a `boolean`. It's the safe way to check a type before
+casting a reference.
+
+```java
+Object obj = "hello";
+if (obj instanceof String) {
+    System.out.println("obj is a String");
+}
+```
+
+Since Java 16, pattern matching for `instanceof` lets you check and cast in
+one step, binding the result to a new variable only inside the branch where
+the check succeeded:
+
+```java
+Object obj = "hello";
+if (obj instanceof String str) {
+    System.out.println("length is " + str.length());   // str is already a String here
+}
+```
+
+This replaces the older two-step idiom of checking with `instanceof` and
+then manually casting:
+
+```java
+if (obj instanceof String) {
+    String str = (String) obj;   // the old way — an extra, redundant cast
+    System.out.println("length is " + str.length());
+}
+```
+
+`instanceof` against `null` always evaluates to `false` — it never throws,
+which makes it a safe guard before a cast that otherwise risks a
+`ClassCastException` (see Day 2's exception-handling section).
+
 ## Operator precedence
 
 Java evaluates `*`, `/`, `%` before `+`, `-`; shift operators before
-relational operators; comparisons before `&`, `^`, `|`; and those before
-`&&`/`||`; assignment is last. When in doubt, use parentheses — they cost
-nothing and remove ambiguity for the next reader.
+relational operators (including `instanceof`); comparisons before `&`, `^`,
+`|`; and those before `&&`/`||`; assignment is last. When in doubt, use
+parentheses — they cost nothing and remove ambiguity for the next reader.
 
 ```java
 int result = 2 + 3 * 4;       // 14, not 20
@@ -157,6 +195,10 @@ int clearer = 2 + (3 * 4);    // same value, clearer intent
 - `~x` equals `-x - 1` because of two's complement — it is not just "flip
   the digits" in the everyday sense.
 - `>>` preserves sign, `>>>` always zero-fills regardless of sign.
+- `instanceof` never throws, even against `null` — it's the safe guard
+  before a cast.
+- Pattern matching for `instanceof` (Java 16+) combines the check and cast
+  into one expression.
 - Prefer explicit parentheses over relying on precedence rules from memory.
 
 ## Common pitfalls
@@ -169,9 +211,11 @@ int clearer = 2 + (3 * 4);    // same value, clearer intent
   more broadly.
 - Reaching for `>>` when `>>>` is what's actually needed (e.g. hashing code
   that must not care about sign).
+- Casting a reference without an `instanceof` guard first, risking a
+  `ClassCastException` at runtime.
 
 ## Try it yourself
 
 Run [`OperatorsDemo.java`](../src/day03/OperatorsDemo.java) and predict each
 line of output before running it — especially the division, modulo,
-increment, and bitwise/shift sections.
+increment, bitwise/shift, and instanceof sections.
