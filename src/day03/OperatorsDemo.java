@@ -55,6 +55,22 @@ public class OperatorsDemo {
         System.out.println("-8 >> 1 = " + (-8 >> 1) + " (sign-preserving)");
         System.out.println("-8 >>> 1 = " + (-8 >>> 1) + " (zero-filled, ignores sign)");
 
+        // instanceof operator
+        System.out.println("\n=== instanceof ===");
+        Object obj = "hello";
+        if (obj instanceof String) {
+            System.out.println("obj is a String (old-style check)");
+        }
+
+        // Pattern matching for instanceof (Java 16+): check and cast in one step
+        if (obj instanceof String str) {
+            System.out.println("pattern-matched length is " + str.length());
+        }
+
+        Object notAString = 42;
+        System.out.println("null instanceof String -> " + (null instanceof String));
+        System.out.println("42 instanceof String -> " + (notAString instanceof String));
+
         // Operator precedence
         System.out.println("\n=== Precedence ===");
         int result = 2 + 3 * 4;
