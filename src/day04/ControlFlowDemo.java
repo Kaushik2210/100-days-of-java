@@ -47,5 +47,39 @@ public class ControlFlowDemo {
         } catch (NullPointerException e) {
             System.out.println("caught NPE from unboxing null flag");
         }
+
+        // Classic switch statement with grouped labels and fall-through
+        System.out.println("\n=== Classic switch ===");
+        for (int day = 1; day <= 7; day++) {
+            switch (day) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    System.out.println("day " + day + " -> weekday");
+                    break;
+                case 6:
+                case 7:
+                    System.out.println("day " + day + " -> weekend");
+                    break;
+                default:
+                    System.out.println("day " + day + " -> invalid");
+            }
+        }
+
+        // Arrow-form switch expression with yield
+        System.out.println("\n=== Switch expression (arrow form) ===");
+        for (int day = 1; day <= 7; day++) {
+            String description = switch (day) {
+                case 1, 2, 3, 4, 5 -> {
+                    String label = "weekday";
+                    yield label + " (day " + day + ")";
+                }
+                case 6, 7 -> "weekend";
+                default -> "invalid";
+            };
+            System.out.println(description);
+        }
     }
 }
