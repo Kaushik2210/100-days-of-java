@@ -1,6 +1,8 @@
 # Day 5: Loops — for, while & do-while
 
-Today covers Java's three loop constructs: `for`, `while`, and `do-while`.
+Today covers Java's three loop constructs (`for`, `while`, `do-while`) and
+the jump statements that control them (`break`, `continue`, and labeled
+loops).
 
 ## The classic for loop
 
@@ -76,6 +78,55 @@ the input is invalid" — you need at least one prompt before you can
 validate anything. Note the trailing `;` after the `while (...)` clause —
 it's easy to forget and won't compile without it.
 
+## break and continue
+
+```java
+for (int i = 0; i < 10; i++) {
+    if (i == 4) {
+        break; // exit the loop entirely
+    }
+    System.out.println(i);
+}
+
+for (int i = 0; i < 6; i++) {
+    if (i % 2 == 0) {
+        continue; // skip straight to the next iteration
+    }
+    System.out.println(i); // only odd values print
+}
+```
+
+`break` exits the nearest enclosing loop (or `switch`) immediately —
+nothing after it in the loop body runs, and the loop's update/condition
+clauses are not evaluated again. `continue` jumps straight to the next
+iteration: for a `for` loop that means the update clause still runs before
+the condition is rechecked; for `while`/`do-while` it means the condition
+is rechecked directly.
+
+## Labeled break and continue
+
+```java
+outer:
+for (int row = 0; row < 3; row++) {
+    for (int col = 0; col < 3; col++) {
+        if (row == 1 && col == 1) {
+            continue outer; // skip to the next row
+        }
+        if (row == 2 && col == 0) {
+            break outer; // exit both loops
+        }
+        System.out.println("row=" + row + " col=" + col);
+    }
+}
+```
+
+A label (an identifier followed by `:`) placed before a loop lets an inner
+loop's `break`/`continue` target an *outer* loop by name, instead of only
+affecting the innermost one. Without the label, `break`/`continue` inside
+the inner loop could only ever affect that inner loop — there'd be no way
+to stop or skip the outer loop from within the nested one short of using a
+flag variable.
+
 ## Key points
 
 - The for loop's three clauses run in this order per iteration: condition
@@ -86,6 +137,9 @@ it's easy to forget and won't compile without it.
   to modify the collection you're iterating over.
 - `while` may run zero times; `do-while` always runs at least once — that's
   the entire difference between them.
+- `break` exits the nearest loop/switch; `continue` skips to the next
+  iteration of the nearest loop; labels let either one target an outer
+  loop by name.
 
 ## Common pitfalls
 
@@ -101,10 +155,11 @@ it's easy to forget and won't compile without it.
 - Writing `while (condition);` with a stray semicolon, creating an
   accidental empty-body infinite loop (or a loop that busy-waits without
   doing anything useful).
+- Assuming a bare `continue` inside a nested loop affects the outer loop —
+  it only ever affects the innermost enclosing loop unless you use a label.
 
 ## Try it yourself
 
 Run `src/day05/LoopsDemo.java` to see the classic for loop, the
-multi-variable form, a for-each loop over an array, a `while` loop, and a
-`do-while` loop. `break`, `continue`, and labeled loops are covered in a
-follow-up commit.
+multi-variable form, a for-each loop, `while`, `do-while`, `break`,
+`continue`, and labeled break/continue across nested loops.
