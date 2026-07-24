@@ -1,7 +1,7 @@
 # Day 6: Arrays & Multidimensional Arrays
 
-Today covers Java arrays: fixed-size, single-type containers, starting
-with one-dimensional arrays.
+Today covers Java arrays: fixed-size, single-type containers. First
+one-dimensional arrays, then multidimensional and jagged arrays.
 
 ## Declaring and creating arrays
 
@@ -56,6 +56,50 @@ A newly created array of a reference type is filled with `null`, not empty
 strings or empty objects — iterating and calling a method on an
 uninitialized element throws `NullPointerException`.
 
+## Two-dimensional arrays
+
+```java
+int[][] grid = new int[3][4]; // 3 rows, 4 columns, all zeros
+grid[1][2] = 7;
+```
+
+A Java 2D array is really an array of arrays: `grid` is an `int[3][]`
+where each of the 3 slots holds its own `int[4]`. `new int[3][4]`
+allocates all of that in one call, but the "rectangular" shape is a
+convenience, not a distinct data structure.
+
+```java
+int[][] matrix = {
+    {1, 2, 3},
+    {4, 5, 6}
+};
+for (int row = 0; row < matrix.length; row++) {
+    for (int col = 0; col < matrix[row].length; col++) {
+        System.out.print(matrix[row][col] + " ");
+    }
+    System.out.println();
+}
+```
+
+Note `matrix.length` gives the number of rows, and `matrix[row].length`
+gives that specific row's length — asking for "the number of columns" only
+makes sense per-row, because rows don't have to be the same length.
+
+## Jagged arrays
+
+```java
+int[][] jagged = new int[3][];
+jagged[0] = new int[]{1};
+jagged[1] = new int[]{1, 2};
+jagged[2] = new int[]{1, 2, 3};
+```
+
+Because a 2D array is just an array of array references, each row can be a
+different length, or even `null` until assigned. This is what "jagged"
+means — genuinely uneven rows, not a rectangular grid padded with zeros.
+Iterating a jagged array without checking `row.length` per row (or
+handling a possible `null` row) is a common source of bugs.
+
 ## Key points
 
 - Array size is fixed at creation; there's no built-in resize.
@@ -64,6 +108,9 @@ uninitialized element throws `NullPointerException`.
   `clone()`/`Arrays.copyOf` are needed for an independent copy.
 - Numeric arrays default to `0`/`0.0`, `boolean[]` defaults to `false`,
   reference-type arrays default to `null`.
+- A Java 2D array is an array of array references; `new int[3][4]` is
+  shorthand for a rectangular shape, but rows can be independently sized
+  or left `null` (jagged arrays).
 
 ## Common pitfalls
 
@@ -74,9 +121,14 @@ uninitialized element throws `NullPointerException`.
   `ArrayIndexOutOfBoundsException`.
 - Assuming `int[] b = a;` makes an independent copy — it doesn't; mutating
   through `b` is visible through `a` too.
+- Assuming every row of a 2D array has the same length — only true for
+  arrays created with `new type[rows][cols]`; jagged arrays built row by
+  row can differ.
+- Forgetting a row in a jagged array can be `null` (from `new int[3][]`
+  before assignment), causing `NullPointerException` on access.
 
 ## Try it yourself
 
 Run `src/day06/ArraysDemo.java` to see array creation, indexing, default
-values, and the reference-sharing behavior. Multidimensional arrays are
-covered in a follow-up commit.
+values, reference-sharing behavior, a rectangular 2D array, and a jagged
+array. Common `Arrays` utility methods are covered in a follow-up commit.
