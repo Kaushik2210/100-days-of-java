@@ -1,7 +1,8 @@
 # Day 6: Arrays & Multidimensional Arrays
 
-Today covers Java arrays: fixed-size, single-type containers. First
-one-dimensional arrays, then multidimensional and jagged arrays.
+Today covers Java arrays: fixed-size, single-type containers. One-
+dimensional arrays, multidimensional/jagged arrays, and the
+`java.util.Arrays` helper class.
 
 ## Declaring and creating arrays
 
@@ -100,6 +101,31 @@ means — genuinely uneven rows, not a rectangular grid padded with zeros.
 Iterating a jagged array without checking `row.length` per row (or
 handling a possible `null` row) is a common source of bugs.
 
+## The java.util.Arrays helper class
+
+Arrays themselves have almost no methods (just `length` and `clone()`);
+everything else lives in the static `java.util.Arrays` class.
+
+```java
+import java.util.Arrays;
+
+int[] nums = {5, 3, 1, 4, 2};
+
+Arrays.sort(nums);                       // sorts in place: [1, 2, 3, 4, 5]
+int index = Arrays.binarySearch(nums, 4); // requires a sorted array first
+int[] copy = Arrays.copyOf(nums, 3);      // [1, 2, 3] - truncates/pads
+boolean same = Arrays.equals(nums, copy); // element-wise equality
+Arrays.fill(nums, 0);                     // overwrites every element with 0
+System.out.println(Arrays.toString(nums)); // readable [0, 0, 0, 0, 0]
+```
+
+`Arrays.sort` mutates the array in place and returns `void`. `==` on two
+arrays compares references, not contents — `Arrays.equals` is what
+actually compares elements. `System.out.println(nums)` on a raw array
+prints something like `[I@1b6d3586` (the type and a hash), not the
+contents — `Arrays.toString` (or `Arrays.deepToString` for 2D arrays) is
+needed to print readable contents.
+
 ## Key points
 
 - Array size is fixed at creation; there's no built-in resize.
@@ -111,6 +137,8 @@ handling a possible `null` row) is a common source of bugs.
 - A Java 2D array is an array of array references; `new int[3][4]` is
   shorthand for a rectangular shape, but rows can be independently sized
   or left `null` (jagged arrays).
+- Array behavior (sorting, searching, comparing, printing) lives in the
+  static `java.util.Arrays` class, not on the array instance.
 
 ## Common pitfalls
 
@@ -126,9 +154,13 @@ handling a possible `null` row) is a common source of bugs.
   row can differ.
 - Forgetting a row in a jagged array can be `null` (from `new int[3][]`
   before assignment), causing `NullPointerException` on access.
+- Comparing arrays with `==` expecting element-wise equality — it checks
+  reference identity; use `Arrays.equals` instead.
+- Calling `Arrays.binarySearch` on an unsorted array — the result is
+  undefined unless the array is already sorted.
 
 ## Try it yourself
 
 Run `src/day06/ArraysDemo.java` to see array creation, indexing, default
-values, reference-sharing behavior, a rectangular 2D array, and a jagged
-array. Common `Arrays` utility methods are covered in a follow-up commit.
+values, reference-sharing behavior, a rectangular 2D array, a jagged
+array, and common `Arrays` utility methods.
