@@ -43,5 +43,33 @@ public class ArraysDemo {
         System.out.println("flags[0] = " + flags[0]);
         System.out.println("names[0] = " + names[0]);
         System.out.println("prices[0] = " + prices[0]);
+
+        // Rectangular 2D array
+        System.out.println("\n=== 2D array ===");
+        int[][] grid = new int[3][4];
+        grid[1][2] = 7;
+        System.out.println("grid[1][2] = " + grid[1][2]);
+        System.out.println("grid[0][0] default = " + grid[0][0]);
+
+        int[][] matrix = {
+            {1, 2, 3},
+            {4, 5, 6}
+        };
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
+                System.out.print(matrix[row][col] + " ");
+            }
+            System.out.println();
+        }
+
+        // Jagged array: rows have different lengths
+        System.out.println("\n=== Jagged array ===");
+        int[][] jagged = new int[3][];
+        jagged[0] = new int[]{1};
+        jagged[1] = new int[]{1, 2};
+        jagged[2] = new int[]{1, 2, 3};
+        for (int row = 0; row < jagged.length; row++) {
+            System.out.println("row " + row + " length = " + jagged[row].length);
+        }
     }
 }
