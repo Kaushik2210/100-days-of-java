@@ -10,3 +10,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 4 | 2026-07-22 | Control Flow: if/else & switch | [notes](./notes/day04-control-flow.md) | [code](./src/day04/ControlFlowDemo.java) |
 | 5 | 2026-07-23 | Loops: for, while, do-while | [notes](./notes/day05-loops.md) | [code](./src/day05/LoopsDemo.java) |
 | 6 | 2026-07-24 | Arrays & Multidimensional Arrays | [notes](./notes/day06-arrays.md) | [code](./src/day06/ArraysDemo.java) |
+| 7 | 2026-07-25 | Strings & the String Pool | [notes](./notes/day07-strings.md) | [code](./src/day07/StringsDemo.java) |
