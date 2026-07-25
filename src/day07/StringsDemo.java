@@ -28,5 +28,26 @@ public class StringsDemo {
         String runtime = prefix + "lo";
         System.out.println("a == runtime (built at runtime) = " + (a == runtime));
         System.out.println("a.equals(runtime) = " + a.equals(runtime));
+
+        // Common String methods
+        System.out.println("\n=== Common String methods ===");
+        String text = "  Hello, Java World!  ";
+        System.out.println("length = " + text.length());
+        System.out.println("trim = [" + text.trim() + "]");
+        System.out.println("strip = [" + text.strip() + "]");
+        System.out.println("toLowerCase = " + text.toLowerCase());
+        System.out.println("contains(\"Java\") = " + text.contains("Java"));
+        System.out.println("indexOf(\"Java\") = " + text.indexOf("Java"));
+        System.out.println("replace(\"Java\", \"Kotlin\") = " + text.replace("Java", "Kotlin"));
+
+        String hello = "Hello, Java World!";
+        System.out.println("substring(0, 5) = " + hello.substring(0, 5));
+
+        String[] parts = "a,b,c".split(",");
+        System.out.println("split length = " + parts.length);
+        System.out.println("joined = " + String.join("-", "a", "b", "c"));
+
+        System.out.println("\"\".isEmpty() = " + "".isEmpty());
+        System.out.println("\"   \".isBlank() = " + "   ".isBlank());
     }
 }
