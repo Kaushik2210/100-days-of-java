@@ -1,7 +1,8 @@
 # Day 7: Strings & the String Pool
 
 Today covers `String` fundamentals: immutability, how string literals are
-stored, common `String` methods, and mutable alternatives.
+stored, common `String` methods, and `StringBuilder` for when you actually
+need mutation.
 
 ## Strings are immutable
 
@@ -86,6 +87,51 @@ checks length; `isBlank()` (Java 11+) also treats a whitespace-only string
 as blank. Every one of these methods returns a new `String` — none of them
 mutate `text`.
 
+## StringBuilder: when you actually need mutation
+
+```java
+StringBuilder sb = new StringBuilder();
+sb.append("Hello");
+sb.append(", ");
+sb.append("World!");
+System.out.println(sb.toString()); // "Hello, World!"
+```
+
+`StringBuilder` is a genuinely mutable character sequence: `append`,
+`insert`, `delete`, and `reverse` all modify the same underlying buffer in
+place and return `this`, so calls can be chained
+(`sb.append("a").append("b")`). Convert back to an immutable `String` with
+`.toString()` when done.
+
+The reason this matters: building a string with repeated `+=` concatenation
+in a loop,
+
+```java
+String result = "";
+for (int i = 0; i < 1000; i++) {
+    result += i; // creates a NEW String object on every single iteration
+}
+```
+
+allocates a new `String` object on every iteration, because `String` is
+immutable and `+=` can't modify the existing one — it silently does the
+`StringBuilder` work for you *per iteration* instead of once, which is far
+more allocation than necessary. Using one `StringBuilder` across the whole
+loop does the same job with a single growable buffer:
+
+```java
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < 1000; i++) {
+    sb.append(i);
+}
+String result = sb.toString();
+```
+
+`StringBuffer` is an older, synchronized (thread-safe) equivalent to
+`StringBuilder`; unless multiple threads genuinely share the same builder,
+`StringBuilder` is the right default since it skips that synchronization
+overhead.
+
 ## Key points
 
 - `String` objects are immutable: no method on `String` ever changes the
@@ -96,6 +142,9 @@ mutate `text`.
   `String` — use `.equals()` for content comparison.
 - `substring(start, end)` excludes `end`; `String.join` is a static
   method, not called on an instance.
+- `StringBuilder` is genuinely mutable and the right tool for building a
+  string incrementally, especially in a loop; `StringBuffer` is the
+  synchronized equivalent.
 
 ## Common pitfalls
 
@@ -110,10 +159,11 @@ mutate `text`.
   exclusive.
 - Calling `.trim()`/`.strip()` and discarding the result, then being
   surprised the original still has leading/trailing whitespace.
+- Building large strings with `+=` in a loop instead of `StringBuilder`,
+  causing many unnecessary intermediate `String` allocations.
 
 ## Try it yourself
 
 Run `src/day07/StringsDemo.java` to see immutability in action, the string
-pool sharing identical literals, `==` vs `equals()`, and common `String`
-methods in use. Mutable strings via `StringBuilder` are covered in a
-follow-up commit.
+pool sharing identical literals, `==` vs `equals()`, common `String`
+methods, and `StringBuilder` building a string incrementally.
