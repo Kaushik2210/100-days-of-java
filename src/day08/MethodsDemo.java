@@ -27,6 +27,15 @@ public class MethodsDemo {
         // an int argument widens to match the double overload here,
         // since there's no exact multiply(int, double) overload
         System.out.println("multiply(5, 2.0) = " + multiply(5, 2.0));
+
+        // varargs: same method, any number of arguments
+        System.out.println("sum() = " + sum());
+        System.out.println("sum(5) = " + sum(5));
+        System.out.println("sum(1, 2, 3, 4) = " + sum(1, 2, 3, 4));
+
+        // an existing array can be passed straight in too
+        int[] values = {10, 20, 30};
+        System.out.println("sum(values array) = " + sum(values));
     }
 
     public static int add(int a, int b) {
@@ -59,5 +68,13 @@ public class MethodsDemo {
 
     public static int multiply(int a, int b, int c) {
         return a * b * c;
+    }
+
+    public static int sum(int... numbers) {
+        int total = 0;
+        for (int n : numbers) {
+            total += n;
+        }
+        return total;
     }
 }
