@@ -18,6 +18,15 @@ public class MethodsDemo {
         System.out.println("x before increment(x): " + x);
         increment(x);
         System.out.println("x after increment(x): " + x + " (unchanged)");
+
+        // method overloading: same name, different parameter lists
+        System.out.println("multiply(3, 4) = " + multiply(3, 4));
+        System.out.println("multiply(2.5, 4.0) = " + multiply(2.5, 4.0));
+        System.out.println("multiply(2, 3, 4) = " + multiply(2, 3, 4));
+
+        // an int argument widens to match the double overload here,
+        // since there's no exact multiply(int, double) overload
+        System.out.println("multiply(5, 2.0) = " + multiply(5, 2.0));
     }
 
     public static int add(int a, int b) {
@@ -38,5 +47,17 @@ public class MethodsDemo {
     public static void increment(int n) {
         n = n + 1;
         // this only changes the local copy of n, not the caller's variable
+    }
+
+    public static int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public static double multiply(double a, double b) {
+        return a * b;
+    }
+
+    public static int multiply(int a, int b, int c) {
+        return a * b * c;
     }
 }
