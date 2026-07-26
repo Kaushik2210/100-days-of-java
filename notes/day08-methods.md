@@ -149,3 +149,48 @@ find.
 
 Run `src/day08/MethodsDemo.java` for the overloading examples, which
 show `multiply` being called with different argument counts and types.
+
+## Varargs: variable-length argument lists
+
+Sometimes you don't know in advance how many arguments a caller will pass.
+Instead of writing an overload for every possible count, Java lets you
+declare a **varargs** parameter using `...`:
+
+```java
+public static int sum(int... numbers) {
+    int total = 0;
+    for (int n : numbers) {
+        total += n;
+    }
+    return total;
+}
+```
+
+Inside the method, `numbers` is just an `int[]` — varargs are really syntax
+sugar for an array parameter. You can call it with any number of
+arguments, including zero:
+
+```java
+sum();           // numbers = {}
+sum(5);          // numbers = {5}
+sum(1, 2, 3, 4); // numbers = {1, 2, 3, 4}
+```
+
+You can also pass an actual array directly instead of listing individual
+values — Java accepts either form.
+
+### Rules for varargs
+
+- A method can have **at most one** varargs parameter.
+- If there are other parameters, the varargs parameter **must come last**:
+
+```java
+public static void logMessage(String prefix, int... codes) { ... }
+```
+
+- Varargs interacts with overloading: if both an exact-match overload and
+  a varargs overload could apply, Java prefers the more specific
+  (non-varargs) match first.
+
+Run `src/day08/MethodsDemo.java` for a `sum` varargs example called with
+zero, one, and several arguments.
