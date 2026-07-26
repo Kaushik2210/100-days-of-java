@@ -89,3 +89,63 @@ public static boolean isValidAge(int age) {
 
 Run `src/day08/MethodsDemo.java` to see basic methods with parameters,
 return values, and a pass-by-value demonstration.
+
+## Method overloading
+
+Java lets you define multiple methods with the **same name** as long as
+their **parameter lists differ** — either in number of parameters, or in
+parameter types. This is called overloading.
+
+```java
+public static int multiply(int a, int b) {
+    return a * b;
+}
+
+public static double multiply(double a, double b) {
+    return a * b;
+}
+
+public static int multiply(int a, int b, int c) {
+    return a * b * c;
+}
+```
+
+At compile time, the compiler looks at the arguments you pass and figures
+out which overload matches. This is called **compile-time (static)
+polymorphism** — the decision of which method body runs is made before the
+program even executes, based purely on the argument types.
+
+### What counts as a different signature
+
+A method's **signature** is its name plus its parameter types (in order).
+Overloads must have different signatures. These are all valid overloads of
+each other because their parameter lists differ:
+
+```java
+void show(int a)
+void show(int a, int b)
+void show(String a)
+void show(int a, String b)
+void show(String a, int b)   // order matters — different from the one above
+```
+
+### What does NOT count
+
+The **return type alone** cannot distinguish two methods. This does not
+compile, because the parameter list is identical:
+
+```java
+int show(int a) { ... }
+double show(int a) { ... }   // compile error: duplicate method
+```
+
+### Widening and overload resolution
+
+If there's no exact match for the argument types, Java will widen a
+primitive argument to fit an available overload (e.g. an `int` argument can
+widen to match a `double` parameter) rather than fail to compile. If more
+than one overload could apply, Java picks the most specific match it can
+find.
+
+Run `src/day08/MethodsDemo.java` for the overloading examples, which
+show `multiply` being called with different argument counts and types.
