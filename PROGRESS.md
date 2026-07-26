@@ -11,3 +11,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 5 | 2026-07-23 | Loops: for, while, do-while | [notes](./notes/day05-loops.md) | [code](./src/day05/LoopsDemo.java) |
 | 6 | 2026-07-24 | Arrays & Multidimensional Arrays | [notes](./notes/day06-arrays.md) | [code](./src/day06/ArraysDemo.java) |
 | 7 | 2026-07-25 | Strings & the String Pool | [notes](./notes/day07-strings.md) | [code](./src/day07/StringsDemo.java) |
+| 8 | 2026-07-26 | Methods & Method Overloading | [notes](./notes/day08-methods.md) | [code](./src/day08/MethodsDemo.java) |
