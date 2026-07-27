@@ -22,6 +22,16 @@ public class ClassesDemo {
         account.deposit(100.0);
         account.deposit(-50.0); // ignored, invalid deposit
         System.out.println("Balance: " + account.getBalance());
+
+        // object references: b points to the same Account as a
+        Account a = new Account();
+        a.deposit(100.0);
+
+        Account b = a;
+        b.deposit(50.0);
+
+        System.out.println("a's balance: " + a.getBalance()); // 150.0
+        System.out.println("b's balance: " + b.getBalance()); // 150.0, same object
     }
 }
 
