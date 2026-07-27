@@ -16,6 +16,12 @@ public class ClassesDemo {
         // each object has its own copy of the fields
         System.out.println(myDog.name + " is " + myDog.age + " years old");
         System.out.println(anotherDog.name + " is " + anotherDog.age + " years old");
+
+        // encapsulation: balance is private, only reachable through methods
+        Account account = new Account();
+        account.deposit(100.0);
+        account.deposit(-50.0); // ignored, invalid deposit
+        System.out.println("Balance: " + account.getBalance());
     }
 }
 
@@ -25,5 +31,19 @@ class Dog {
 
     void bark() {
         System.out.println(name + " says woof!");
+    }
+}
+
+class Account {
+    private double balance;
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
     }
 }
