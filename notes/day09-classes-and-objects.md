@@ -57,3 +57,41 @@ specific object, then act on it."
 
 Run `src/day09/ClassesDemo.java` to see a `Dog` class defined and a couple
 of `Dog` objects created and used.
+
+## Encapsulation: hiding fields behind methods
+
+Letting outside code reach in and set `myDog.age = -5;` directly is
+dangerous — nothing stops invalid data from being assigned. **Encapsulation**
+means making fields `private` so they can only be touched through methods
+you control, which can validate input before accepting it.
+
+```java
+public class Account {
+    private double balance;
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+}
+```
+
+- `private` fields are only visible inside the class itself — no other
+  class can read or write `balance` directly.
+- A **getter** (`getBalance`) exposes a read-only view of the field.
+- A **setter**, or in this case a purpose-built method like `deposit`,
+  controls exactly how the field can change, and can reject bad input
+  (here, a non-positive deposit is silently ignored).
+
+This is the core OOP idea of keeping an object's internal state consistent
+by only allowing changes through a controlled interface, instead of
+letting any code touch the raw data.
+
+Run `src/day09/ClassesDemo.java` for an `Account` class that keeps
+`balance` private and only exposes it through `getBalance()` and
+`deposit()`.
