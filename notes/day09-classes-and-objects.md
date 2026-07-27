@@ -95,3 +95,34 @@ letting any code touch the raw data.
 Run `src/day09/ClassesDemo.java` for an `Account` class that keeps
 `balance` private and only exposes it through `getBalance()` and
 `deposit()`.
+
+## Object references and shared state
+
+A variable holding an object doesn't hold the object itself — it holds a
+**reference** (an address) pointing to it, same as we saw with arrays on
+Day 6. Assigning one object variable to another copies the reference, not
+the object:
+
+```java
+Account a = new Account();
+a.deposit(100.0);
+
+Account b = a; // b points to the SAME Account as a, not a copy
+b.deposit(50.0);
+
+System.out.println(a.getBalance()); // 150.0 — a sees b's deposit too
+```
+
+Because `a` and `b` refer to the exact same object in memory, a change made
+through `b` is visible through `a`. This is different from the two
+independent `Dog` objects earlier (`myDog` and `anotherDog`), where each
+`new Dog()` call created a *separate* object with its own memory — no
+reference was ever shared between them.
+
+To get a truly independent copy, you have to explicitly create a new
+object and copy the field values over yourself; simple assignment never
+does that for you.
+
+Run `src/day09/ClassesDemo.java` for a demonstration of two variables
+referring to the same `Account` object, and how a deposit through one is
+visible through the other.
