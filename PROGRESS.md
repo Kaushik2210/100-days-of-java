@@ -12,3 +12,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 6 | 2026-07-24 | Arrays & Multidimensional Arrays | [notes](./notes/day06-arrays.md) | [code](./src/day06/ArraysDemo.java) |
 | 7 | 2026-07-25 | Strings & the String Pool | [notes](./notes/day07-strings.md) | [code](./src/day07/StringsDemo.java) |
 | 8 | 2026-07-26 | Methods & Method Overloading | [notes](./notes/day08-methods.md) | [code](./src/day08/MethodsDemo.java) |
+| 9 | 2026-07-27 | Intro to OOP: Classes & Objects | [notes](./notes/day09-classes-and-objects.md) | [code](./src/day09/ClassesDemo.java) |
