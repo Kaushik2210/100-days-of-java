@@ -17,6 +17,10 @@ public class ConstructorsDemo {
 
         System.out.println(puppy.name + " is " + puppy.age + " years old");
         System.out.println(stray.name + " is " + stray.age + " years old");
+
+        // returning this for method chaining
+        Pizza order = new Pizza().addCheese().addPepperoni();
+        System.out.println(order.describe());
     }
 }
 
@@ -39,5 +43,24 @@ class Dog {
 
     void bark() {
         System.out.println(name + " says woof!");
+    }
+}
+
+class Pizza {
+    private boolean cheese;
+    private boolean pepperoni;
+
+    public Pizza addCheese() {
+        this.cheese = true;
+        return this;
+    }
+
+    public Pizza addPepperoni() {
+        this.pepperoni = true;
+        return this;
+    }
+
+    public String describe() {
+        return "Pizza[cheese=" + cheese + ", pepperoni=" + pepperoni + "]";
     }
 }
