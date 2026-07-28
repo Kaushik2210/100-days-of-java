@@ -53,3 +53,67 @@ it from the parameter `name` that's currently shadowing it.
 
 Run `src/day10/ConstructorsDemo.java` to see a `Dog` class with a
 constructor that initializes both fields at creation time.
+
+## Constructor overloading
+
+Just like regular methods (Day 8), a class can have multiple constructors
+as long as their parameter lists differ. This lets callers create an
+object in whichever way is convenient for them:
+
+```java
+public class Dog {
+    String name;
+    int age;
+
+    public Dog(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Dog(String name) {
+        this.name = name;
+        this.age = 0; // default age when not specified
+    }
+
+    public Dog() {
+        this.name = "Unnamed";
+        this.age = 0;
+    }
+}
+```
+
+Now all of these are valid:
+
+```java
+Dog rex = new Dog("Rex", 3);
+Dog puppy = new Dog("Puppy");
+Dog stray = new Dog();
+```
+
+## Constructor chaining with `this(...)`
+
+Repeating `this.age = 0;` in two constructors above is duplicated logic.
+A constructor can call **another constructor in the same class** using
+`this(...)` as its very first statement, avoiding that repetition:
+
+```java
+public Dog(String name, int age) {
+    this.name = name;
+    this.age = age;
+}
+
+public Dog(String name) {
+    this(name, 0); // delegates to the two-argument constructor
+}
+
+public Dog() {
+    this("Unnamed"); // delegates to the one-argument constructor
+}
+```
+
+`this(...)` must be the first line in the constructor body — Java needs to
+know immediately whether this constructor is doing its own initialization
+or delegating to another one first.
+
+Run `src/day10/ConstructorsDemo.java` for the overloaded and chained
+`Dog` constructors in action.
