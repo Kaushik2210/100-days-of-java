@@ -117,3 +117,44 @@ or delegating to another one first.
 
 Run `src/day10/ConstructorsDemo.java` for the overloaded and chained
 `Dog` constructors in action.
+
+## Returning `this` for method chaining
+
+`this` isn't limited to constructors — any instance method can reference
+it too. A common pattern is having a "setter-style" method return `this`,
+so calls can be chained together fluently:
+
+```java
+public class Pizza {
+    private boolean cheese;
+    private boolean pepperoni;
+
+    public Pizza addCheese() {
+        this.cheese = true;
+        return this;
+    }
+
+    public Pizza addPepperoni() {
+        this.pepperoni = true;
+        return this;
+    }
+
+    public String describe() {
+        return "Pizza[cheese=" + cheese + ", pepperoni=" + pepperoni + "]";
+    }
+}
+```
+
+Because each method returns the same object it was called on (`this`),
+the calls can be chained directly:
+
+```java
+Pizza order = new Pizza().addCheese().addPepperoni();
+System.out.println(order.describe());
+```
+
+Without returning `this`, each of those methods would return `void`, and
+you'd have to write three separate statements instead of one fluent chain.
+
+Run `src/day10/ConstructorsDemo.java` for a `Pizza` example that builds up
+an object using chained method calls.
