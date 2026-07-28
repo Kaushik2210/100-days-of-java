@@ -10,6 +10,13 @@ public class ConstructorsDemo {
 
         System.out.println(myDog.name + " is " + myDog.age + " years old");
         System.out.println(anotherDog.name + " is " + anotherDog.age + " years old");
+
+        // constructor overloading: different ways to create a Dog
+        Dog puppy = new Dog("Puppy");
+        Dog stray = new Dog();
+
+        System.out.println(puppy.name + " is " + puppy.age + " years old");
+        System.out.println(stray.name + " is " + stray.age + " years old");
     }
 }
 
@@ -20,6 +27,14 @@ class Dog {
     public Dog(String name, int age) {
         this.name = name;
         this.age = age;
+    }
+
+    public Dog(String name) {
+        this(name, 0); // delegates to the two-argument constructor
+    }
+
+    public Dog() {
+        this("Unnamed"); // delegates to the one-argument constructor
     }
 
     void bark() {
