@@ -14,3 +14,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 8 | 2026-07-26 | Methods & Method Overloading | [notes](./notes/day08-methods.md) | [code](./src/day08/MethodsDemo.java) |
 | 9 | 2026-07-27 | Intro to OOP: Classes & Objects | [notes](./notes/day09-classes-and-objects.md) | [code](./src/day09/ClassesDemo.java) |
 | 10 | 2026-07-28 | Constructors & the `this` Keyword | [notes](./notes/day10-constructors-and-this.md) | [code](./src/day10/ConstructorsDemo.java) |
+| 11 | 2026-07-29 | Inheritance | [notes](./notes/day11-inheritance.md) | [code](./src/day11/InheritanceDemo.java) |
