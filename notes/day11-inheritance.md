@@ -70,3 +70,54 @@ constructor available.
 Run `src/day11/InheritanceDemo.java` to see an `Animal` superclass and a
 `Cat` subclass that extends it, using `super(...)` to initialize the
 inherited field.
+
+## Method overriding
+
+A subclass can provide its own implementation of a method it inherited,
+replacing the superclass's version for objects of that subclass. This is
+called **overriding**:
+
+```java
+class Animal {
+    void makeSound() {
+        System.out.println("Some generic animal sound");
+    }
+}
+
+class Cat extends Animal {
+    @Override
+    void makeSound() {
+        System.out.println("Meow!");
+    }
+}
+```
+
+Unlike overloading (Day 8), an override must have the **exact same
+signature** (name, parameter types, and return type — or a covariant
+return type) as the method it's replacing. This is runtime behavior
+replacement, not a separate method that happens to share a name.
+
+## `@Override`
+
+The `@Override` annotation is optional but strongly recommended. It tells
+the compiler "I intend this to override a superclass method" — if the
+signature doesn't actually match anything in the superclass (a typo in
+the method name, a wrong parameter type), the compiler raises an error
+instead of silently letting you create an unrelated new method.
+
+## `super.method()` — calling the overridden version
+
+Inside an override, you can still call the superclass's original
+implementation using `super.methodName()`, useful when you want to extend
+behavior rather than fully replace it:
+
+```java
+@Override
+void makeSound() {
+    super.makeSound(); // still prints the generic message first
+    System.out.println("...but really, meow!");
+}
+```
+
+Run `src/day11/InheritanceDemo.java` for `Animal.makeSound()` overridden
+in `Cat`, including a call to `super.makeSound()`.
