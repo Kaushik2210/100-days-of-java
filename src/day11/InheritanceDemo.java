@@ -6,6 +6,9 @@ public class InheritanceDemo {
         cat.meow(); // defined in Cat
 
         System.out.println(cat.name + " is a " + cat.breed);
+
+        // method overriding: Cat replaces Animal's makeSound()
+        cat.makeSound();
     }
 }
 
@@ -19,6 +22,10 @@ class Animal {
     void eat() {
         System.out.println(name + " is eating.");
     }
+
+    void makeSound() {
+        System.out.println("Some generic animal sound");
+    }
 }
 
 class Cat extends Animal {
@@ -31,5 +38,11 @@ class Cat extends Animal {
 
     void meow() {
         System.out.println(name + " says meow!");
+    }
+
+    @Override
+    void makeSound() {
+        super.makeSound(); // still prints the generic message first
+        System.out.println("...but really, meow!");
     }
 }
