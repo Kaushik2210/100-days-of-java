@@ -121,3 +121,37 @@ void makeSound() {
 
 Run `src/day11/InheritanceDemo.java` for `Animal.makeSound()` overridden
 in `Cat`, including a call to `super.makeSound()`.
+
+## Single inheritance and the `Object` root
+
+A Java class can `extends` only **one** superclass — unlike some other
+languages, there's no multiple inheritance of classes. (Interfaces, coming
+on Day 14, are how Java achieves similar flexibility without that
+complexity.)
+
+Every class that doesn't explicitly extend anything implicitly extends
+`java.lang.Object`. That means every object in Java — even one from a
+class with no `extends` clause at all — already inherits methods like
+`toString()`, `equals()`, and `hashCode()` from `Object`. We'll cover
+those in depth on Day 17; for now, just know that inheritance in Java
+always forms a single chain going back to `Object` at the root.
+
+## Preventing further inheritance with `final`
+
+Marking a class `final` stops any other class from extending it:
+
+```java
+public final class ImmutablePoint {
+    final int x;
+    final int y;
+    // ...
+}
+```
+
+You can also mark an individual method `final` inside a non-final class,
+which allows the class to be extended but prevents subclasses from
+overriding that specific method. This is useful when a method's behavior
+must never change no matter what subclass is created.
+
+Run `src/day11/InheritanceDemo.java` for the full `Animal`/`Cat` example
+built up over today's notes.
