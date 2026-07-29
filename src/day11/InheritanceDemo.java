@@ -9,6 +9,9 @@ public class InheritanceDemo {
 
         // method overriding: Cat replaces Animal's makeSound()
         cat.makeSound();
+
+        // species() is final in Animal, so Cat cannot override it
+        System.out.println(cat.name + " species: " + cat.species());
     }
 }
 
@@ -25,6 +28,11 @@ class Animal {
 
     void makeSound() {
         System.out.println("Some generic animal sound");
+    }
+
+    // final: subclasses cannot change what "species" means for an Animal
+    final String species() {
+        return "Animal";
     }
 }
 
