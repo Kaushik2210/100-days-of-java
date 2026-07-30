@@ -14,6 +14,24 @@ public class PolymorphismDemo {
 
         Cat declaredAsCat = new Cat("Whiskers");
         greet(declaredAsCat); // resolves to greet(Cat) at compile time
+
+        // upcast: Cat -> Animal, always safe, no cast operator needed
+        Animal upcast = new Cat("Mittens");
+
+        // downcast: Animal -> Cat, needs an explicit cast and an instanceof check first
+        if (upcast instanceof Cat) {
+            Cat pounced = (Cat) upcast;
+            pounced.pounce();
+        }
+
+        // guard prevents a ClassCastException for objects that aren't really a Cat
+        for (Animal a : animals) {
+            if (a instanceof Cat) {
+                ((Cat) a).pounce();
+            } else {
+                System.out.println(a.name + " can't pounce");
+            }
+        }
     }
 
     static void greet(Animal a) {
@@ -45,6 +63,10 @@ class Cat extends Animal {
     @Override
     void makeSound() {
         System.out.println(name + " says meow");
+    }
+
+    void pounce() {
+        System.out.println(name + " pounces!");
     }
 }
 
