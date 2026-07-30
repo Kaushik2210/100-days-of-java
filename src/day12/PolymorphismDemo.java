@@ -7,6 +7,21 @@ public class PolymorphismDemo {
         for (Animal a : animals) {
             a.makeSound();
         }
+
+        // overload resolution uses the DECLARED type, not the runtime type
+        Animal declaredAsAnimal = new Cat("Whiskers");
+        greet(declaredAsAnimal); // resolves to greet(Animal) at compile time
+
+        Cat declaredAsCat = new Cat("Whiskers");
+        greet(declaredAsCat); // resolves to greet(Cat) at compile time
+    }
+
+    static void greet(Animal a) {
+        System.out.println("Hello, animal");
+    }
+
+    static void greet(Cat c) {
+        System.out.println("Hello, cat");
     }
 }
 
