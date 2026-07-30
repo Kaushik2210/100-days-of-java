@@ -45,4 +45,36 @@ greet(a); // prints "Hello, animal" -- picked at compile time using a's DECLARED
 
 Even though `a` holds a `Cat` at runtime, `greet(a)` resolves to `greet(Animal)` because that's what the compiler sees when it type-checks the call. This is the key difference from overriding: overload resolution happens once, at compile time, based on static types; override dispatch happens every time the method runs, based on the real object.
 
-Tomorrow's notes will build a small example showing both kinds side by side, then dig into upcasting/downcasting and `instanceof`.
+## Upcasting and downcasting
+
+**Upcasting** is assigning a subclass object to a superclass-typed variable. It's always safe and happens implicitly:
+
+```java
+Animal a = new Cat("Whiskers"); // upcast, no cast operator needed
+```
+
+Once upcast, you can only call methods that exist on the declared type (`Animal`) — even though the object is really a `Cat`, `a.pounce()` won't compile unless `pounce()` is declared on `Animal` too.
+
+**Downcasting** goes the other direction — treating a superclass reference as its more specific subclass — and needs an explicit cast because it can fail at runtime:
+
+```java
+Animal a = new Cat("Whiskers");
+Cat c = (Cat) a;       // downcast, works because a really is a Cat
+c.pounce();             // now Cat-only methods are available
+
+Animal other = new Dog("Rex");
+Cat wrong = (Cat) other; // compiles, but throws ClassCastException at runtime
+```
+
+## Checking before you downcast: `instanceof`
+
+Because a bad downcast throws `ClassCastException`, it's good practice to check the object's real type first with `instanceof`:
+
+```java
+if (a instanceof Cat) {
+    Cat c = (Cat) a;
+    c.pounce();
+}
+```
+
+Tomorrow's code example will put overloading, overriding, upcasting, and a safe `instanceof`-guarded downcast into one runnable program.
