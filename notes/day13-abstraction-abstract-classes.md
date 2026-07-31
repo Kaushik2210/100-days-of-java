@@ -46,4 +46,75 @@ class Circle extends Shape {
 
 Now `new Circle(2.0)` works, because `Circle` supplies a real implementation for `area()`. Once every abstract method has a body, the class is "complete" and can be instantiated.
 
-Tomorrow's notes continue with more abstract class rules: abstract classes can have constructors and fields, a subclass of an abstract class can itself stay abstract, and how this compares to interfaces (Day 14).
+## Abstract classes can have constructors and fields
+
+Even though you can never call `new` directly on an abstract class, it's still allowed to declare fields and a constructor. Subclasses call that constructor with `super(...)`, exactly like ordinary inheritance from Day 11 — the constructor just never runs on its own, only as part of building a subclass object.
+
+```java
+abstract class Shape {
+    String name; // shared field
+
+    Shape(String name) { // constructor -- only ever called via super(...)
+        this.name = name;
+    }
+
+    abstract double area();
+
+    void describe() {
+        System.out.println(name + " has area " + area());
+    }
+}
+
+class Circle extends Shape {
+    double radius;
+
+    Circle(double radius) {
+        super("Circle"); // runs Shape's constructor
+        this.radius = radius;
+    }
+
+    @Override
+    double area() {
+        return Math.PI * radius * radius;
+    }
+}
+```
+
+## A subclass of an abstract class can stay abstract
+
+If a subclass doesn't implement every inherited abstract method, it must also be declared `abstract` — Java won't let a class be "half-complete" and still instantiable. Only when a class in the chain finally fills in all abstract methods does it become concrete.
+
+```java
+abstract class Polygon extends Shape {
+    // doesn't implement area() -- still abstract, still can't be instantiated
+    Polygon(String name) {
+        super(name);
+    }
+
+    abstract int sides();
+}
+
+class Triangle extends Polygon {
+    double base, height;
+
+    Triangle(double base, double height) {
+        super("Triangle");
+        this.base = base;
+        this.height = height;
+    }
+
+    @Override
+    double area() {
+        return 0.5 * base * height;
+    }
+
+    @Override
+    int sides() {
+        return 3;
+    }
+}
+```
+
+`Triangle` is finally concrete because it implements both `area()` (from `Shape`) and `sides()` (from `Polygon`).
+
+Tomorrow's notes continue with more abstract class rules and how this compares to interfaces (Day 14).
