@@ -117,4 +117,15 @@ class Triangle extends Polygon {
 
 `Triangle` is finally concrete because it implements both `area()` (from `Shape`) and `sides()` (from `Polygon`).
 
-Tomorrow's notes continue with more abstract class rules and how this compares to interfaces (Day 14).
+## A few more rules worth knowing
+
+- An abstract method can't be `private` or `static` — it has to be overridable, and both of those modifiers work against that (private isn't inherited, static isn't polymorphic).
+- An abstract method can't have a body, and a non-abstract method must have one — there's no in-between.
+- A class with even one abstract method must itself be declared `abstract`, even if every other method is concrete.
+- It's legal (if unusual) to declare a class `abstract` even with zero abstract methods, just to block direct instantiation and force users to go through a subclass.
+
+## When to reach for an abstract class
+
+Use one when a group of related classes share both some common, ready-to-use behavior (put it in concrete methods) and some behavior that only makes sense per-subclass (put it in abstract methods). The `Shape` example is typical: every shape can `describe()` itself the same way, but only a specific shape knows how to compute its own `area()`. This is different from plain inheritance, which doesn't force subclasses to supply anything — abstraction is inheritance plus a contract.
+
+Day 14 covers interfaces, which solve a similar problem but without the "one shared implementation" fields/constructors that abstract classes allow.
