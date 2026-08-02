@@ -17,3 +17,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 11 | 2026-07-29 | Inheritance | [notes](./notes/day11-inheritance.md) | [code](./src/day11/InheritanceDemo.java) |
 | 12 | 2026-07-30 | Polymorphism (Compile-time & Runtime) | [notes](./notes/day12-polymorphism.md) | [code](./src/day12/PolymorphismDemo.java) |
 | 13 | 2026-07-31 | Abstraction: Abstract Classes | [notes](./notes/day13-abstraction-abstract-classes.md) | [code](./src/day13/AbstractionDemo.java) |
+| 14 | 2026-08-01 | Interfaces & Default Methods | [notes](./notes/day14-interfaces-and-default-methods.md) | [code](./src/day14/InterfacesDemo.java) |
