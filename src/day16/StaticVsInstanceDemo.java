@@ -10,6 +10,9 @@ public class StaticVsInstanceDemo {
         System.out.println("a.count = " + a.count);
         System.out.println("b.count = " + b.count);
         System.out.println("Counter.totalCreated = " + Counter.totalCreated);
+
+        System.out.println("square(6) = " + MathUtils.square(6)); // no instance needed
+        System.out.println("AppConfig.VERSION = " + AppConfig.VERSION);
     }
 }
 
@@ -25,5 +28,20 @@ class Counter {
 
     void increment() {
         count++;
+    }
+}
+
+class MathUtils {
+    static int square(int n) {
+        return n * n;
+    }
+}
+
+class AppConfig {
+    static final String VERSION;
+
+    static {
+        VERSION = "1.0.0"; // computed once, when the class is first loaded
+        System.out.println("AppConfig loaded, version " + VERSION);
     }
 }
