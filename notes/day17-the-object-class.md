@@ -39,3 +39,47 @@ System.out.println(p); // calls p.toString() automatically -- prints Person{name
 ```
 
 Anywhere an object is concatenated with a `String`, or passed to `System.out.println`, or interpolated, Java calls `toString()` on it implicitly.
+
+## equals()
+
+`Object`'s default `equals()` does exactly what `==` does for objects: compares references, so two objects are only "equal" if they're literally the same object in memory.
+
+```java
+Person a = new Person("Asha", 30);
+Person b = new Person("Asha", 30);
+System.out.println(a.equals(b)); // false -- default equals() is reference equality
+```
+
+That's usually not what you want. If two `Person` objects represent the same person, you probably want `equals()` to compare their *data*, not their identity. Override it to define logical equality:
+
+```java
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) return true;              // same reference -- trivially equal
+    if (!(obj instanceof Person other)) return false; // different type, or null -- not equal
+    return age == other.age && name.equals(other.name);
+}
+```
+
+## hashCode() and the equals/hashCode contract
+
+Every object also has a `hashCode()`, an `int` used by hash-based collections (`HashMap`, `HashSet`) to bucket objects for fast lookup. Java enforces one hard rule: **if two objects are equal according to `equals()`, they must return the same `hashCode()`.** The reverse isn't required — unequal objects are allowed to share a hash code (a "collision"), just not the other way around.
+
+```java
+@Override
+public int hashCode() {
+    return java.util.Objects.hash(name, age); // combines both fields the same way equals() uses them
+}
+```
+
+Breaking this contract — overriding `equals()` without also overriding `hashCode()` — is one of the most common Java bugs. A `HashSet` or `HashMap` key that seems "equal" by your own logic can behave as if it isn't present at all, because the collection looks in the wrong bucket first.
+
+```java
+Set<Person> people = new HashSet<>();
+people.add(new Person("Asha", 30));
+System.out.println(people.contains(new Person("Asha", 30)));
+// true only if both equals() AND hashCode() are overridden consistently;
+// with only equals() overridden, this can incorrectly print false
+```
+
+**Rule of thumb**: always override `equals()` and `hashCode()` together, never just one, and base both on the same set of fields.
