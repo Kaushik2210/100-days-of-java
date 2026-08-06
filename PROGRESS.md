@@ -22,3 +22,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 16 | 2026-08-03 | Static vs Instance Members | [notes](./notes/day16-static-vs-instance-members.md) | [code](./src/day16/StaticVsInstanceDemo.java) |
 | 17 | 2026-08-04 | The Object Class: equals(), hashCode(), toString() | [notes](./notes/day17-the-object-class.md) | [code](./src/day17/ObjectMethodsDemo.java) |
 | 18 | 2026-08-05 | Packages & Access Control | [notes](./notes/day18-packages-and-access-control.md) | [code](./src/day18/PackagesDemo.java) |
+| 19 | 2026-08-06 | Enums | [notes](./notes/day19-enums.md) | [code](./src/day19/EnumsDemo.java) |
