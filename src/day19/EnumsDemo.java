@@ -18,6 +18,9 @@ public class EnumsDemo {
         System.out.println(today + " is a " + description);
 
         System.out.println("Earth surface gravity = " + Planet.EARTH.surfaceGravity());
+
+        System.out.println("2 PLUS 3 = " + Operation.PLUS.apply(2, 3));
+        System.out.println("2 MINUS 3 = " + Operation.MINUS.apply(2, 3));
     }
 }
 
@@ -42,4 +45,21 @@ enum Planet {
         final double G = 6.67300E-11;
         return G * mass / (radius * radius);
     }
+}
+
+enum Operation {
+    PLUS {
+        @Override
+        double apply(double a, double b) {
+            return a + b;
+        }
+    },
+    MINUS {
+        @Override
+        double apply(double a, double b) {
+            return a - b;
+        }
+    };
+
+    abstract double apply(double a, double b); // each constant must implement this
 }
