@@ -62,3 +62,42 @@ System.out.println(report.summarize()); // ThinkPad running fan at 2200 RPM
 ```
 
 Use an inner class when the nested type genuinely represents "a piece of this specific outer object" and needs direct access to its state — an iterator over a specific collection instance is the classic example (`ArrayList.Itr` is a real inner class in the JDK).
+
+## Local classes
+
+A class declared **inside a method body** — visible only within that method, and able to capture the method's local variables (as long as they're effectively final, i.e. never reassigned after being set).
+
+```java
+class ReportGenerator {
+    String buildGreeting(String name) {
+        class Greeter { // only exists inside this method
+            String greet() {
+                return "Hello, " + name + "!"; // captures the enclosing method's local variable
+            }
+        }
+        return new Greeter().greet();
+    }
+}
+```
+
+Local classes are rare in modern code — lambdas and method references usually cover the same need more concisely — but they're useful when you need a small helper with multiple methods or mutable state, scoped tightly to one method.
+
+## Anonymous classes
+
+A class with no name, declared and instantiated in a single expression — typically to supply a one-off implementation of an interface or abstract class without formally naming a new type.
+
+```java
+interface Greeting {
+    String message();
+}
+
+Greeting g = new Greeting() { // anonymous implementation, defined right where it's used
+    @Override
+    public String message() {
+        return "Hi there!";
+    }
+};
+System.out.println(g.message());
+```
+
+Like local classes, anonymous classes can capture effectively-final local variables from the enclosing scope. Since Java 8, a functional interface (one abstract method) is usually better expressed as a lambda instead — `Runnable r = () -> System.out.println("run");` is shorter than the equivalent anonymous class — but anonymous classes are still needed for interfaces/abstract classes with more than one method to implement, or when you need fields of your own inside the implementation.
