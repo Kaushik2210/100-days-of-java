@@ -29,3 +29,36 @@ Computer.Battery battery = new Computer.Battery(5000); // no Computer object inv
 ```
 
 Use a static nested class when the nested type is logically grouped with the outer class (it belongs in that namespace) but doesn't need access to any specific outer object's state — e.g., a `Map.Entry`-style helper type, or a builder.
+
+## (Non-static) inner classes
+
+Drop the `static` keyword and the nested class becomes an **inner class**: every instance of it is implicitly tied to one specific instance of the outer class, and can freely read and write that outer instance's fields — even private ones.
+
+```java
+class Computer {
+    String model;
+    int fanSpeed;
+
+    Computer(String model) {
+        this.model = model;
+    }
+
+    class DiagnosticsReport { // tied to one specific Computer instance
+        String summarize() {
+            return model + " running fan at " + fanSpeed + " RPM"; // reads the outer instance's fields directly
+        }
+    }
+}
+```
+
+Creating an inner class instance requires an outer instance to attach to — you construct it *through* that instance with `outer.new Inner()`:
+
+```java
+Computer laptop = new Computer("ThinkPad");
+laptop.fanSpeed = 2200;
+
+Computer.DiagnosticsReport report = laptop.new DiagnosticsReport();
+System.out.println(report.summarize()); // ThinkPad running fan at 2200 RPM
+```
+
+Use an inner class when the nested type genuinely represents "a piece of this specific outer object" and needs direct access to its state — an iterator over a specific collection instance is the classic example (`ArrayList.Itr` is a real inner class in the JDK).
