@@ -8,7 +8,33 @@ public class NestedClassesDemo {
         laptop.fanSpeed = 2200;
         Computer.DiagnosticsReport report = laptop.new DiagnosticsReport(); // built through the outer instance
         System.out.println(report.summarize());
+
+        ReportGenerator generator = new ReportGenerator();
+        System.out.println(generator.buildGreeting("Asha")); // local class used inside the method
+
+        Greeting g = new Greeting() { // anonymous class implementing Greeting on the spot
+            @Override
+            public String message() {
+                return "Hi there!";
+            }
+        };
+        System.out.println(g.message());
     }
+}
+
+class ReportGenerator {
+    String buildGreeting(String name) {
+        class Greeter { // only exists inside this method
+            String greet() {
+                return "Hello, " + name + "!";
+            }
+        }
+        return new Greeter().greet();
+    }
+}
+
+interface Greeting {
+    String message();
 }
 
 class Computer {
