@@ -23,3 +23,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 17 | 2026-08-04 | The Object Class: equals(), hashCode(), toString() | [notes](./notes/day17-the-object-class.md) | [code](./src/day17/ObjectMethodsDemo.java) |
 | 18 | 2026-08-05 | Packages & Access Control | [notes](./notes/day18-packages-and-access-control.md) | [code](./src/day18/PackagesDemo.java) |
 | 19 | 2026-08-06 | Enums | [notes](./notes/day19-enums.md) | [code](./src/day19/EnumsDemo.java) |
+| 20 | 2026-08-07 | Nested & Inner Classes | [notes](./notes/day20-nested-and-inner-classes.md) | [code](./src/day20/NestedClassesDemo.java) |
