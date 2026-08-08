@@ -25,3 +25,45 @@ try {
 ```
 
 If the exception type thrown doesn't match any `catch`, it keeps propagating up the call stack looking for a handler that does match — and if none exists anywhere, the program terminates with a stack trace.
+
+## Multiple catch blocks and multi-catch
+
+A `try` can have several `catch` blocks, checked top to bottom — the first one whose type matches (or is a supertype of) the thrown exception runs. More specific exception types must come before more general ones, or the compiler rejects the code as unreachable.
+
+```java
+try {
+    int[] numbers = { 1, 2, 3 };
+    System.out.println(numbers[5]); // throws ArrayIndexOutOfBoundsException
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Bad index: " + e.getMessage());
+} catch (Exception e) { // broader catch-all, must come after the specific one
+    System.out.println("Something else went wrong: " + e.getMessage());
+}
+```
+
+When two unrelated exception types should be handled identically, combine them in one `catch` with `|` instead of duplicating the block:
+
+```java
+catch (ArithmeticException | ArrayIndexOutOfBoundsException e) {
+    System.out.println("Numeric or index problem: " + e.getMessage());
+}
+```
+
+## finally
+
+A `finally` block runs after the `try` (and any matching `catch`) completes, **whether or not an exception was thrown**, and even if the `try` or `catch` returns early. It's the right place for cleanup that must always happen — closing a file, releasing a lock, logging that an operation finished.
+
+```java
+try {
+    System.out.println("Opening resource");
+    throw new RuntimeException("boom");
+} catch (RuntimeException e) {
+    System.out.println("Caught: " + e.getMessage());
+} finally {
+    System.out.println("Closing resource"); // always runs
+}
+```
+
+## try-with-resources
+
+For any resource implementing `AutoCloseable` (streams, readers, database connections), `try (Resource r = ...)` automatically calls `r.close()` at the end of the block — even on an exception — without needing an explicit `finally`. This is the preferred pattern for resource cleanup in modern Java; Day 34 (File I/O) covers it in more depth.
