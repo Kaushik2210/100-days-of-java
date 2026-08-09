@@ -7,6 +7,13 @@ public class CustomExceptionsDemo {
         } catch (InsufficientFundsException e) {
             System.out.println("Withdrawal failed: " + e.getMessage());
         }
+
+        try {
+            new ReportService().generate();
+        } catch (ReportGenerationException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Caused by: " + e.getCause()); // the original NumberFormatException
+        }
     }
 }
 
@@ -29,5 +36,25 @@ class BankAccount {
                 "Cannot withdraw " + amount + "; balance is only " + balance);
         }
         balance -= amount;
+    }
+}
+
+class ReportGenerationException extends RuntimeException {
+    ReportGenerationException(String message, Throwable cause) {
+        super(message, cause); // preserves the original exception as the cause
+    }
+}
+
+class ReportService {
+    void generate() {
+        try {
+            parseData();
+        } catch (NumberFormatException e) {
+            throw new ReportGenerationException("Failed to generate report", e); // wrap, don't discard
+        }
+    }
+
+    private void parseData() {
+        Integer.parseInt("not-a-number"); // throws NumberFormatException
     }
 }
