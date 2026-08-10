@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ListsDemo {
@@ -15,5 +16,15 @@ public class ListsDemo {
         queue.add(1, "x");  // insert at index 1 -- shifts b, c right
         queue.remove("a");  // removes the first matching element -- shifts everything left
         System.out.println(queue);
+
+        LinkedList<String> playlist = new LinkedList<>();
+        playlist.add("Intro");
+        playlist.add("Track 1");
+        playlist.add(0, "Cold Open"); // cheap insert at the front -- O(1) for a LinkedList
+        System.out.println(playlist);
+
+        playlist.addFirst("Pre-roll ad"); // LinkedList also acts as a Deque
+        playlist.addLast("Outro");
+        System.out.println(playlist);
     }
 }
