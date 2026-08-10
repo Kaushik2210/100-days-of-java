@@ -26,3 +26,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 20 | 2026-08-07 | Nested & Inner Classes | [notes](./notes/day20-nested-and-inner-classes.md) | [code](./src/day20/NestedClassesDemo.java) |
 | 21 | 2026-08-08 | Exception Handling: try/catch/finally | [notes](./notes/day21-exception-handling.md) | [code](./src/day21/ExceptionsDemo.java) |
 | 22 | 2026-08-09 | Custom Exceptions & Exception Chaining | [notes](./notes/day22-custom-exceptions-and-chaining.md) | [code](./src/day22/CustomExceptionsDemo.java) |
+| 23 | 2026-08-10 | Collections Framework: List (ArrayList, LinkedList) | [notes](./notes/day23-collections-list.md) | [code](./src/day23/ListsDemo.java) |
