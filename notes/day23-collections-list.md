@@ -27,3 +27,24 @@ System.out.println(queue); // [x, b, c]
 ```
 
 `ArrayList` is the default choice for most `List` needs: fast random access, and additions/removals mostly happen at the end (which is O(1) amortized, since the backing array only needs to resize occasionally).
+
+## LinkedList
+
+`LinkedList` is backed by a doubly-linked list of nodes instead of an array. Adding or removing at either end (or once you already have a reference to the right spot) is O(1), because it's just relinking a couple of node pointers — no shifting. But `get(index)` is O(n): to reach index 5, it has to walk the chain from one end, node by node.
+
+```java
+List<String> playlist = new LinkedList<>();
+playlist.add("Intro");
+playlist.add("Track 1");
+playlist.add(0, "Cold Open"); // cheap insert at the front -- O(1) for a LinkedList, O(n) for an ArrayList
+System.out.println(playlist);
+```
+
+`LinkedList` also implements `Deque`, so it doubles as a double-ended queue with `addFirst`, `addLast`, `removeFirst`, `removeLast` — useful when you're using the list as a stack or queue rather than for indexed access.
+
+## Choosing between them
+
+- **Frequent access by index, or mostly appending to the end** → `ArrayList`. It's more cache-friendly and lower-overhead per element, and covers the vast majority of real-world list usage.
+- **Frequent insertion/removal at the front or in the middle, or using the list as a queue/stack/deque** → `LinkedList`.
+
+When in doubt, start with `ArrayList` — it's the right default unless profiling shows the insertion pattern actually needs `LinkedList`'s strengths.
