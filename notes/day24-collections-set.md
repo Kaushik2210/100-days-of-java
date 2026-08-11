@@ -26,3 +26,37 @@ System.out.println(letters); // order is unspecified -- don't rely on it
 ```
 
 `HashSet` relies entirely on `equals()`/`hashCode()` to detect duplicates, which is why Day 17's rule — override both together, consistently — matters just as much for sets as it does for `HashMap` keys.
+
+## LinkedHashSet
+
+`LinkedHashSet` is a middle ground: it has the same O(1) average performance as `HashSet`, but additionally maintains a linked list through the entries so iteration order matches **insertion order**. Use it when you want set semantics (no duplicates) but still need predictable, repeatable iteration order.
+
+## TreeSet
+
+`TreeSet` is backed by a red-black tree and keeps its elements in **sorted order** at all times — every `add` inserts into the correct sorted position. Basic operations become O(log n) instead of O(1), trading some speed for always-sorted iteration.
+
+```java
+Set<Integer> scores = new TreeSet<>();
+scores.add(85);
+scores.add(42);
+scores.add(67);
+System.out.println(scores); // [42, 67, 85] -- always sorted, regardless of insertion order
+```
+
+For elements without a "natural" ordering (or to sort them differently), pass a `Comparator` to the constructor:
+
+```java
+Set<String> byLength = new TreeSet<>((a, b) -> a.length() - b.length());
+byLength.add("kiwi");
+byLength.add("fig");
+byLength.add("apple");
+System.out.println(byLength); // sorted by string length: [fig, kiwi, apple]
+```
+
+`TreeSet` also implements `NavigableSet`, adding methods like `first()`, `last()`, `higher(e)`, and `lower(e)` for range-style queries that neither `HashSet` nor `LinkedHashSet` can offer.
+
+## Choosing between them
+
+- **No ordering guarantee needed, want the fastest option** → `HashSet`.
+- **Need iteration order to match insertion order** → `LinkedHashSet`.
+- **Need elements kept sorted, or range queries like "everything greater than X"** → `TreeSet`.
