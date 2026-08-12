@@ -28,3 +28,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 22 | 2026-08-09 | Custom Exceptions & Exception Chaining | [notes](./notes/day22-custom-exceptions-and-chaining.md) | [code](./src/day22/CustomExceptionsDemo.java) |
 | 23 | 2026-08-10 | Collections Framework: List (ArrayList, LinkedList) | [notes](./notes/day23-collections-list.md) | [code](./src/day23/ListsDemo.java) |
 | 24 | 2026-08-11 | Collections Framework: Set (HashSet, TreeSet) | [notes](./notes/day24-collections-set.md) | [code](./src/day24/SetsDemo.java) |
+| 25 | 2026-08-12 | Collections Framework: Map (HashMap, TreeMap) | [notes](./notes/day25-collections-map.md) | [code](./src/day25/MapsDemo.java) |
