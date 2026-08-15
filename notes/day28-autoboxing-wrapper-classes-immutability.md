@@ -32,3 +32,30 @@ System.out.println(c.equals(d)); // true -- equals() compares values, always cor
 ```
 
 **Rule of thumb**: always compare wrapper objects with `.equals()`, never `==` — the cache makes `==` "accidentally" work for small values and fail for larger ones, which is a trap, not a feature to rely on.
+
+## Wrapper classes are immutable
+
+Once created, a wrapper object's value can never change — there's no `setValue()` on `Integer`. "Changing" a wrapper variable actually creates a brand-new wrapper object and rebinds the variable to it; the original object is untouched (and, from Day 20's encapsulation angle, this is the same pattern as the `Point` class from Day 15 — no mutating methods, only ways to produce a new value). This immutability is what makes wrapper objects safe to share and cache, including the `-128..127` cache above.
+
+```java
+Integer x = 10;
+Integer y = x;
+x = x + 1; // creates a NEW Integer(11) and reassigns x -- does not mutate the original object
+System.out.println(x); // 11
+System.out.println(y); // 10 -- completely unaffected
+```
+
+## The null-unboxing trap
+
+A wrapper reference can be `null` (it's an object), but a primitive cannot. Unboxing a `null` wrapper throws `NullPointerException` at the exact point Java tries to call `.intValue()` (or the equivalent) on nothing.
+
+```java
+Integer maybeCount = null;
+int count = maybeCount; // throws NullPointerException -- unboxing null has nothing to unbox
+```
+
+This commonly bites people with `Map.get()`, which returns `null` for a missing key: `int x = map.get("missing");` throws NPE, even though it looks like ordinary numeric code. Prefer `getOrDefault()` (Day 25) or an explicit null check when the key might not be present.
+
+## When to use primitives vs wrappers
+
+Prefer primitives (`int`, `double`, `boolean`, ...) for local variables, loop counters, and plain computation — they're faster and can never be `null`. Reach for wrappers only when a reference type is genuinely required: as a generic type argument, a collection element, a field that needs to represent "no value" via `null`, or a return type where `null` legitimately means "absent."
