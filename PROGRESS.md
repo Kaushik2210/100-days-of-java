@@ -34,3 +34,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 28 | 2026-08-15 | Autoboxing, Wrapper Classes & Immutability | [notes](./notes/day28-autoboxing-wrapper-classes-immutability.md) | [code](./src/day28/WrapperClassesDemo.java) |
 | 29 | 2026-08-16 | Lambda Expressions & Functional Interfaces | [notes](./notes/day29-lambda-expressions-and-functional-interfaces.md) | [code](./src/day29/LambdasDemo.java) |
 | 30 | 2026-08-17 | Streams API: map/filter/reduce | [notes](./notes/day30-streams-map-filter-reduce.md) | [code](./src/day30/StreamsDemo.java) |
+| 31 | 2026-08-18 | Streams API: Collectors & Grouping | [notes](./notes/day31-streams-collectors-and-grouping.md) | [code](./src/day31/CollectorsDemo.java) |
