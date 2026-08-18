@@ -56,6 +56,6 @@ When the classification is a `Predicate` (true/false) rather than an arbitrary k
 ```java
 Map<Boolean, List<String>> byLength = words.stream()
     .collect(Collectors.partitioningBy(w -> w.length() > 5));
-System.out.println(byLength.get(true));  // [banana, avocado, blueberry]
-System.out.println(byLength.get(false)); // [apple, cherry]
+System.out.println(byLength.get(true));  // [banana, avocado, blueberry, cherry]
+System.out.println(byLength.get(false)); // [apple]
 ```
