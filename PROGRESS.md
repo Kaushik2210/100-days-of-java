@@ -35,3 +35,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 29 | 2026-08-16 | Lambda Expressions & Functional Interfaces | [notes](./notes/day29-lambda-expressions-and-functional-interfaces.md) | [code](./src/day29/LambdasDemo.java) |
 | 30 | 2026-08-17 | Streams API: map/filter/reduce | [notes](./notes/day30-streams-map-filter-reduce.md) | [code](./src/day30/StreamsDemo.java) |
 | 31 | 2026-08-18 | Streams API: Collectors & Grouping | [notes](./notes/day31-streams-collectors-and-grouping.md) | [code](./src/day31/CollectorsDemo.java) |
+| 32 | 2026-08-19 | Optional & Null Safety | [notes](./notes/day32-optional-and-null-safety.md) | [code](./src/day32/OptionalDemo.java) |
