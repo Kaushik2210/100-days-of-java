@@ -15,6 +15,24 @@ public class OptionalDemo {
             System.out.println("maybe.get() = " + maybe.get());
         }
         System.out.println("maybeMissing.isPresent() = " + maybeMissing.isPresent());
+
+        String greeting = Optional.ofNullable(lookupName(true))
+            .map(n -> "Hello, " + n)
+            .orElse("Hello, stranger");
+        System.out.println(greeting);
+
+        String fallbackGreeting = Optional.ofNullable(lookupName(false))
+            .map(n -> "Hello, " + n)
+            .orElse("Hello, stranger");
+        System.out.println(fallbackGreeting);
+
+        Optional.ofNullable(lookupName(true))
+            .filter(n -> n.length() > 2)
+            .ifPresent(n -> System.out.println("Valid name: " + n));
+
+        Optional.ofNullable(lookupName(false))
+            .filter(n -> n.length() > 2)
+            .ifPresent(n -> System.out.println("This should not print"));
     }
 
     static String lookupName(boolean found) {
