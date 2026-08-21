@@ -36,3 +36,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 30 | 2026-08-17 | Streams API: map/filter/reduce | [notes](./notes/day30-streams-map-filter-reduce.md) | [code](./src/day30/StreamsDemo.java) |
 | 31 | 2026-08-18 | Streams API: Collectors & Grouping | [notes](./notes/day31-streams-collectors-and-grouping.md) | [code](./src/day31/CollectorsDemo.java) |
 | 32 | 2026-08-19 | Optional & Null Safety | [notes](./notes/day32-optional-and-null-safety.md) | [code](./src/day32/OptionalDemo.java) |
+| 33 | 2026-08-20 | Date & Time API (java.time) | [notes](./notes/day33-date-and-time-api.md) | [code](./src/day33/DateTimeDemo.java) |
