@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class FileIODemo {
 
@@ -23,5 +26,19 @@ public class FileIODemo {
                 System.out.println(line);
             }
         }
+
+        Path path = Files.createTempFile("day34-nio-notes", ".txt");
+        path.toFile().deleteOnExit();
+
+        Files.writeString(path, "First nio line\nSecond nio line"); // one call
+
+        List<String> lines = Files.readAllLines(path);
+        System.out.println(lines);
+
+        String content = Files.readString(path);
+        System.out.println(content);
+
+        System.out.println("exists = " + Files.exists(path));
+        System.out.println("size = " + Files.size(path) + " bytes");
     }
 }
