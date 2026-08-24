@@ -47,3 +47,30 @@ class Person implements Serializable {
     // ...
 }
 ```
+
+## transient: excluding fields from serialization
+
+Marking a field `transient` tells the JVM to skip it entirely during serialization — useful for fields that are derived, sensitive, or simply not meaningful outside the current JVM run (a cached computation, an open database connection, a password).
+
+```java
+class Session implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    String username;
+    transient String authToken; // never written to the serialized bytes
+
+    Session(String username, String authToken) {
+        this.username = username;
+        this.authToken = authToken;
+    }
+}
+```
+
+After deserialization, a `transient` field is reset to its type's default value (`null` for objects, `0`/`false` for primitives) — it's simply never populated from the stream.
+
+## Pitfalls and alternatives
+
+- **Every field's type must also be `Serializable`** (or `transient`), all the way down the object graph — a single non-serializable field with no `transient` marker throws `NotSerializableException` at write time.
+- **It's a security surface.** Deserializing data from an untrusted source can execute arbitrary code during reconstruction in some circumstances; never deserialize input you don't fully trust.
+- **It's tightly coupled to the exact class shape.** Renaming a field or changing its type breaks compatibility with previously serialized data, even with a matching `serialVersionUID`.
+- **Modern alternatives are usually preferred** for anything crossing process or language boundaries: JSON (via libraries like Jackson/Gson) or Protocol Buffers are more portable, human-readable (for JSON), and don't carry Java's built-in deserialization risks. Native Java serialization is mostly reserved for short-lived, same-JVM-version use cases today.
