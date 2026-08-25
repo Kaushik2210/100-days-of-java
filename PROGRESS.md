@@ -39,3 +39,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 33 | 2026-08-20 | Date & Time API (java.time) | [notes](./notes/day33-date-and-time-api.md) | [code](./src/day33/DateTimeDemo.java) |
 | 34 | 2026-08-21 | File I/O: java.io & java.nio | [notes](./notes/day34-file-io.md) | [code](./src/day34/FileIODemo.java) |
 | 35 | 2026-08-22 | Serialization | [notes](./notes/day35-serialization.md) | [code](./src/day35/SerializationDemo.java) |
+| 36 | 2026-08-23 | Threads & the Runnable Interface | [notes](./notes/day36-threads-and-runnable.md) | [code](./src/day36/ThreadsDemo.java) |
