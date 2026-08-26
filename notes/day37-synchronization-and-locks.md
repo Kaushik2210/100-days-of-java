@@ -40,3 +40,37 @@ class Counter {
 ```
 
 Using a dedicated private lock object (rather than `this`) avoids surprising interactions with outside code that might also synchronize on the same object.
+
+## ReentrantLock: an explicit alternative
+
+`java.util.concurrent.locks.ReentrantLock` provides the same mutual-exclusion guarantee as `synchronized`, but as an object you control explicitly — lock and unlock are separate calls, which gives more flexibility (try-locking with a timeout, checking whether the lock is held, allowing a thread to be interrupted while waiting) at the cost of needing to remember to unlock manually.
+
+```java
+class Counter {
+    private int count;
+    private final ReentrantLock lock = new ReentrantLock();
+
+    void increment() {
+        lock.lock();
+        try {
+            count++;
+        } finally {
+            lock.unlock(); // MUST be in finally -- unlocking is never automatic like synchronized
+        }
+    }
+}
+```
+
+The `finally` block is not optional: if the protected code throws and the lock is never released in a `finally`, every other thread waiting on that lock blocks forever. `synchronized` releases its lock automatically on any exit path (normal return or exception), which is exactly why it's the simpler default choice — reach for `ReentrantLock` only when you need one of its extra capabilities.
+
+## Deadlock
+
+A deadlock happens when two or more threads each hold a lock the other needs, and neither can proceed — thread A holds lock 1 and waits for lock 2, while thread B holds lock 2 and waits for lock 1. Neither ever releases, so both wait forever.
+
+```java
+// Thread A: synchronized(lock1) { ... synchronized(lock2) { ... } }
+// Thread B: synchronized(lock2) { ... synchronized(lock1) { ... } }
+// If A acquires lock1 and B acquires lock2 at the same moment, both threads block forever
+```
+
+The simplest defense is **consistent lock ordering**: if every thread in a program always acquires multiple locks in the same fixed order (e.g. always lock1 before lock2, never the reverse), the circular-wait condition above can't occur.
