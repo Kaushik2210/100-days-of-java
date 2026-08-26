@@ -41,3 +41,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 35 | 2026-08-22 | Serialization | [notes](./notes/day35-serialization.md) | [code](./src/day35/SerializationDemo.java) |
 | 36 | 2026-08-23 | Threads & the Runnable Interface | [notes](./notes/day36-threads-and-runnable.md) | [code](./src/day36/ThreadsDemo.java) |
 | 37 | 2026-08-24 | Synchronization & Locks | [notes](./notes/day37-synchronization-and-locks.md) | [code](./src/day37/SynchronizationDemo.java) |
+| 38 | 2026-08-25 | Executors & Thread Pools | [notes](./notes/day38-executors-and-thread-pools.md) | [code](./src/day38/ExecutorsDemo.java) |
