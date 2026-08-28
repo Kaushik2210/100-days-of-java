@@ -16,6 +16,26 @@ public class CompletableFutureDemo {
             .thenApply(n -> "The answer is " + n);
 
         System.out.println(chained.join());
+
+        CompletableFuture<Integer> userId = CompletableFuture.supplyAsync(() -> 42);
+        CompletableFuture<String> profile = userId.thenCompose(id ->
+            CompletableFuture.supplyAsync(() -> "Profile for user " + id)
+        );
+        System.out.println(profile.join());
+
+        CompletableFuture<Integer> price = CompletableFuture.supplyAsync(() -> 100);
+        CompletableFuture<Double> taxRate = CompletableFuture.supplyAsync(() -> 0.08);
+        CompletableFuture<Double> total = price.thenCombine(taxRate, (p, rate) -> p * (1 + rate));
+        System.out.println("total = " + total.join());
+
+        CompletableFuture<Integer> risky = CompletableFuture.supplyAsync(() -> {
+            throw new RuntimeException("boom");
+        });
+        CompletableFuture<Integer> recovered = risky.exceptionally(ex -> {
+            System.out.println("Recovered from: " + ex.getMessage());
+            return -1;
+        });
+        System.out.println("recovered = " + recovered.join());
     }
 
     static void sleepQuietly(long millis) {
