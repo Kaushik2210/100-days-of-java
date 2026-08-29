@@ -43,3 +43,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 37 | 2026-08-24 | Synchronization & Locks | [notes](./notes/day37-synchronization-and-locks.md) | [code](./src/day37/SynchronizationDemo.java) |
 | 38 | 2026-08-25 | Executors & Thread Pools | [notes](./notes/day38-executors-and-thread-pools.md) | [code](./src/day38/ExecutorsDemo.java) |
 | 39 | 2026-08-26 | CompletableFuture & Async Programming | [notes](./notes/day39-completablefuture-and-async.md) | [code](./src/day39/CompletableFutureDemo.java) |
+| 40 | 2026-08-27 | Concurrent Collections | [notes](./notes/day40-concurrent-collections.md) | [code](./src/day40/ConcurrentCollectionsDemo.java) |
