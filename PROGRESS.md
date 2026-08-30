@@ -44,3 +44,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 38 | 2026-08-25 | Executors & Thread Pools | [notes](./notes/day38-executors-and-thread-pools.md) | [code](./src/day38/ExecutorsDemo.java) |
 | 39 | 2026-08-26 | CompletableFuture & Async Programming | [notes](./notes/day39-completablefuture-and-async.md) | [code](./src/day39/CompletableFutureDemo.java) |
 | 40 | 2026-08-27 | Concurrent Collections | [notes](./notes/day40-concurrent-collections.md) | [code](./src/day40/ConcurrentCollectionsDemo.java) |
+| 41 | 2026-08-28 | Atomic Variables & the Java Memory Model (volatile) | [notes](./notes/day41-atomic-variables-and-memory-model.md) | [code](./src/day41/AtomicAndVolatileDemo.java) |
