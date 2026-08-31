@@ -45,3 +45,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 39 | 2026-08-26 | CompletableFuture & Async Programming | [notes](./notes/day39-completablefuture-and-async.md) | [code](./src/day39/CompletableFutureDemo.java) |
 | 40 | 2026-08-27 | Concurrent Collections | [notes](./notes/day40-concurrent-collections.md) | [code](./src/day40/ConcurrentCollectionsDemo.java) |
 | 41 | 2026-08-28 | Atomic Variables & the Java Memory Model (volatile) | [notes](./notes/day41-atomic-variables-and-memory-model.md) | [code](./src/day41/AtomicAndVolatileDemo.java) |
+| 42 | 2026-08-29 | JVM Internals: Class Loading & Memory Areas | [notes](./notes/day42-jvm-class-loading-and-memory-areas.md) | [code](./src/day42/ClassLoadingDemo.java) |
