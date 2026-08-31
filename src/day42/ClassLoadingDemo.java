@@ -9,6 +9,16 @@ public class ClassLoadingDemo {
 
         System.out.println("ClassLoader for this class: " + ClassLoadingDemo.class.getClassLoader());
         System.out.println("ClassLoader for String: " + String.class.getClassLoader()); // null -- loaded by the bootstrap loader
+
+        try {
+            recurseForever(0);
+        } catch (StackOverflowError e) {
+            System.out.println("Caught StackOverflowError -- the per-thread stack ran out of frames");
+        }
+    }
+
+    static void recurseForever(long depth) {
+        recurseForever(depth + 1); // no base case -- each call pushes another stack frame
     }
 }
 
