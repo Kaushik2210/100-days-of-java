@@ -1,7 +1,15 @@
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+
 public class GarbageCollectionDemo {
 
     public static void main(String[] args) throws InterruptedException {
         Runtime runtime = Runtime.getRuntime();
+
+        System.out.println("Max heap (-Xmx, or JVM default): ~" + runtime.maxMemory() / (1024 * 1024) + " MB");
+        for (GarbageCollectorMXBean gcBean : ManagementFactory.getGarbageCollectorMXBeans()) {
+            System.out.println("GC in use: " + gcBean.getName());
+        }
 
         printMemory(runtime, "Before allocation");
 
