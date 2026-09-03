@@ -48,3 +48,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 42 | 2026-08-29 | JVM Internals: Class Loading & Memory Areas | [notes](./notes/day42-jvm-class-loading-and-memory-areas.md) | [code](./src/day42/ClassLoadingDemo.java) |
 | 43 | 2026-08-30 | Garbage Collection Algorithms & Tuning | [notes](./notes/day43-garbage-collection.md) | [code](./src/day43/GarbageCollectionDemo.java) |
 | 44 | 2026-08-31 | Design Patterns: Creational (Singleton, Factory, Builder) | [notes](./notes/day44-creational-design-patterns.md) | [code](./src/day44/CreationalPatternsDemo.java) |
+| 45 | 2026-09-01 | Design Patterns: Structural (Adapter, Decorator, Proxy) | [notes](./notes/day45-structural-design-patterns.md) | [code](./src/day45/StructuralPatternsDemo.java) |
