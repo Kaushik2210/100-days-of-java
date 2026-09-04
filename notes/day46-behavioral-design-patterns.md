@@ -27,13 +27,13 @@ class WeatherStation {
 
 class PhoneDisplay implements Observer {
     public void update(double temperature) {
-        System.out.println("Phone display: " + temperature + "°C");
+        System.out.println("Phone display: " + temperature + " degrees C");
     }
 }
 
 class WebDashboard implements Observer {
     public void update(double temperature) {
-        System.out.println("Web dashboard: " + temperature + "°C");
+        System.out.println("Web dashboard: " + temperature + " degrees C");
     }
 }
 ```
