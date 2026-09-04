@@ -49,3 +49,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 43 | 2026-08-30 | Garbage Collection Algorithms & Tuning | [notes](./notes/day43-garbage-collection.md) | [code](./src/day43/GarbageCollectionDemo.java) |
 | 44 | 2026-08-31 | Design Patterns: Creational (Singleton, Factory, Builder) | [notes](./notes/day44-creational-design-patterns.md) | [code](./src/day44/CreationalPatternsDemo.java) |
 | 45 | 2026-09-01 | Design Patterns: Structural (Adapter, Decorator, Proxy) | [notes](./notes/day45-structural-design-patterns.md) | [code](./src/day45/StructuralPatternsDemo.java) |
+| 46 | 2026-09-02 | Design Patterns: Behavioral (Observer, Strategy, Command) | [notes](./notes/day46-behavioral-design-patterns.md) | [code](./src/day46/BehavioralPatternsDemo.java) |
