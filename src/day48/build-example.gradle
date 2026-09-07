@@ -1,0 +1,17 @@
+// Reference example only -- not built by this repo, which has no build tool yet.
+// Describes the same project as pom-example.xml, in Gradle's Groovy DSL.
+
+plugins {
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+repositories {
+    mavenCentral() // Gradle can pull from the same repositories Maven uses
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
