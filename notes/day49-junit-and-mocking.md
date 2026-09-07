@@ -60,3 +60,47 @@ class CalculatorTest {
     }
 }
 ```
+
+## Why mocking: isolating the unit under test
+
+A "unit" test should test one unit — but real code often depends on collaborators that are slow, unreliable, or side-effecting in tests: a database (Day 47), a network call, the system clock. **Mockito** creates a fake stand-in object ("a mock") for such a dependency, so a test can control exactly what it returns and verify exactly how it was used, without ever touching the real thing.
+
+```java
+interface PaymentGateway {
+    boolean charge(String cardNumber, double amount);
+}
+
+class OrderService {
+    private final PaymentGateway gateway;
+
+    OrderService(PaymentGateway gateway) {
+        this.gateway = gateway; // dependency injected in, not created internally -- this is what makes mocking possible
+    }
+
+    boolean placeOrder(String cardNumber, double amount) {
+        if (amount <= 0) return false;
+        return gateway.charge(cardNumber, amount);
+    }
+}
+```
+
+## Mocking with Mockito: mock, when/thenReturn, verify
+
+```java
+import org.mockito.Mockito;
+import static org.mockito.Mockito.*;
+
+PaymentGateway mockGateway = mock(PaymentGateway.class); // a fake PaymentGateway, no real network call
+
+when(mockGateway.charge("4111-1111-1111-1111", 50.0)).thenReturn(true); // program its behavior
+
+OrderService service = new OrderService(mockGateway);
+boolean result = service.placeOrder("4111-1111-1111-1111", 50.0);
+
+assertTrue(result);
+verify(mockGateway).charge("4111-1111-1111-1111", 50.0); // asserts the mock was actually called this way
+```
+
+`mock(PaymentGateway.class)` creates an object satisfying the `PaymentGateway` interface where every method does nothing and returns a default value, until `when(...).thenReturn(...)` programs specific behavior for specific arguments. `verify(mock).method(args)` asserts that a particular call actually happened — useful for confirming side-effecting logic ran (e.g. "the order service really did call charge," not just "the return value looked right").
+
+This only works cleanly because `OrderService` receives its `PaymentGateway` through the constructor (**dependency injection**) rather than constructing a real one internally — a design principle that pays off specifically because it makes substituting a mock trivial in tests.
