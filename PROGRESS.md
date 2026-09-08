@@ -53,3 +53,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 47 | 2026-09-03 | JDBC & Database Connectivity | [notes](./notes/day47-jdbc-and-database-connectivity.md) | [code](./src/day47/JdbcDemo.java) |
 | 48 | 2026-09-04 | Build Tools: Maven & Gradle Fundamentals | [notes](./notes/day48-maven-and-gradle-fundamentals.md) | [code](./src/day48/BuildToolsDemo.java) |
 | 49 | 2026-09-05 | Unit Testing with JUnit & Mocking | [notes](./notes/day49-junit-and-mocking.md) | [code](./src/day49/CalculatorTest.java) |
+| 50 | 2026-09-06 | Performance Profiling & Best Practices | [notes](./notes/day50-performance-profiling-and-best-practices.md) | [code](./src/day50/PerformanceDemo.java) |
