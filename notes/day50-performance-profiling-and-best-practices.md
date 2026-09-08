@@ -37,3 +37,45 @@ System.out.println("StringBuilder: " + builderMillis + " ms");
 ```
 
 This kind of measured, side-by-side comparison — not a guess — is what should drive a decision like "should this hot loop use `StringBuilder`."
+
+## A second example: collection choice under load
+
+Day 23 covered `ArrayList` vs `LinkedList`. The theoretical Big-O difference is real, but it's still worth *measuring* rather than assuming, since constant factors (cache locality, JIT behavior) can matter as much as asymptotic complexity for realistic sizes.
+
+```java
+List<Integer> arrayList = new ArrayList<>();
+List<Integer> linkedList = new LinkedList<>();
+for (int i = 0; i < 20_000; i++) {
+    arrayList.add(i);
+    linkedList.add(i);
+}
+
+long start = System.nanoTime();
+long arraySum = 0;
+for (int i = 0; i < arrayList.size(); i++) {
+    arraySum += arrayList.get(i); // O(1) per access
+}
+long arrayMillis = (System.nanoTime() - start) / 1_000_000;
+
+start = System.nanoTime();
+long linkedSum = 0;
+for (int i = 0; i < linkedList.size(); i++) {
+    linkedSum += linkedList.get(i); // O(n) per access -- walks the list from the front each time
+}
+long linkedMillis = (System.nanoTime() - start) / 1_000_000;
+
+System.out.println("ArrayList indexed access: " + arrayMillis + " ms");
+System.out.println("LinkedList indexed access: " + linkedMillis + " ms");
+```
+
+## Common performance pitfalls worth knowing
+
+- **Autoboxing in hot loops** (Day 28) — `Integer` vs `int` in a tight loop adds allocation and unboxing overhead that adds up at scale.
+- **String concatenation in loops** (above) — use `StringBuilder`, or let the compiler do it for you in a single non-loop expression (`javac` already converts a single chained `+` expression into `StringBuilder` calls automatically — it's only a `+=` accumulating *across loop iterations* that's the real problem).
+- **Wrong collection for the access pattern** (Day 23) — indexed access on a `LinkedList`, or frequent front-insertion on an `ArrayList`.
+- **Unbounded caches or collections** — anything that grows without limit risks `OutOfMemoryError` (Day 42/43) under real load, however fine it looked in testing.
+- **Synchronizing too broadly** (Day 37) — locking more code than necessary serializes work that could otherwise run in parallel; measure whether contention is even a real bottleneck before reaching for finer-grained locking or lock-free structures (Day 41).
+
+## Closing note
+
+Across these 50 days — from `HelloJava` on Day 1 through JVM internals, concurrency, design patterns, and now profiling — the throughline has been the same: understand what the language and runtime are actually doing, then write code that matches that understanding rather than folklore. That habit outlasts any specific API.
