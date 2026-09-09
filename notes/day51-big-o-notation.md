@@ -49,3 +49,33 @@ boolean hasDuplicate(int[] arr) {
 - **Drop lower-order terms**: O(n² + n) simplifies to O(n²) — for large `n`, the `n²` term dominates and the `n` term becomes irrelevant by comparison.
 - **Different inputs get different variables**: an algorithm looping over array `a` (size `n`) and, separately, array `b` (size `m`) is O(n + m), not O(n) — they aren't the same input, so they can't share a variable.
 - **Nested loops multiply; sequential loops add**: a loop inside a loop over the same input is O(n · n) = O(n²); two separate loops one after another are O(n) + O(n) = O(n), by the "drop constants" rule.
+
+## Space complexity
+
+Big-O also describes memory, not just time — how much *extra* space an algorithm needs, beyond the input itself, as a function of `n`.
+
+```java
+// O(1) extra space -- a fixed number of variables, regardless of input size
+int sum(int[] arr) {
+    int total = 0; // one variable, however big arr is
+    for (int x : arr) total += x;
+    return total;
+}
+
+// O(n) extra space -- allocates a new structure that grows with the input
+int[] doubled(int[] arr) {
+    int[] result = new int[arr.length]; // a second array, same size as the input
+    for (int i = 0; i < arr.length; i++) result[i] = arr[i] * 2;
+    return result;
+}
+```
+
+There's often a genuine time/space tradeoff: a `HashSet` used to detect duplicates in O(n) time (Day 24) trades away the O(1) space of the nested-loop version above for O(n) extra space, in exchange for being dramatically faster.
+
+## Best, worst, and average case
+
+The same algorithm can have different Big-O bounds depending on the input. Linear search (Day 53) is O(1) best case (the very first element is the match), but O(n) worst case (the target is last, or absent, so every element must be checked) and O(n) average case too. Big-O by convention usually refers to the **worst case** unless stated otherwise, since that's the guarantee that actually matters for reliability — an algorithm that's usually fast but occasionally catastrophic is a real risk in production.
+
+## Amortized analysis (a preview)
+
+Some operations are expensive only occasionally, with the cost "amortized" (spread out) over many cheap calls. `ArrayList.add()` (Day 23) is O(1) *amortized*: most calls just place an element in existing space, but occasionally the backing array is full and must be resized (an O(n) copy) — averaged over many calls, the resizes are rare enough that the *average* cost per call stays O(1), even though any single call could hit that O(n) resize. Day 93 covers amortized analysis in more depth.
