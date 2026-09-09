@@ -54,3 +54,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 48 | 2026-09-04 | Build Tools: Maven & Gradle Fundamentals | [notes](./notes/day48-maven-and-gradle-fundamentals.md) | [code](./src/day48/BuildToolsDemo.java) |
 | 49 | 2026-09-05 | Unit Testing with JUnit & Mocking | [notes](./notes/day49-junit-and-mocking.md) | [code](./src/day49/CalculatorTest.java) |
 | 50 | 2026-09-06 | Performance Profiling & Best Practices | [notes](./notes/day50-performance-profiling-and-best-practices.md) | [code](./src/day50/PerformanceDemo.java) |
+| 51 | 2026-09-09 | Big-O Notation & Algorithm Complexity Analysis | [notes](./notes/day51-big-o-notation.md) | [code](./src/day51/BigODemo.java) |
