@@ -41,3 +41,28 @@ int binarySearch(int[] sortedArr, int target) {
 ```
 
 Binary search on a sorted array of a billion elements takes at most ~30 comparisons; linear search could take a billion. The tradeoff: binary search only works if the data is already sorted (or the cost of sorting it, Day 55/56, is paid once up front and amortized across many searches).
+
+## Recursive binary search
+
+Since each step of binary search is itself "search this smaller sub-range the same way" (Day 52), it's naturally expressible as recursion — the recursive case narrows `low`/`high` exactly like the loop version, and hitting `low > high` (nothing left to search) is the base case.
+
+```java
+int binarySearchRecursive(int[] sortedArr, int target, int low, int high) {
+    if (low > high) return -1; // base case -- search range is empty, target isn't present
+
+    int mid = low + (high - low) / 2;
+    if (sortedArr[mid] == target) {
+        return mid;
+    } else if (sortedArr[mid] < target) {
+        return binarySearchRecursive(sortedArr, target, mid + 1, high); // search the right half
+    } else {
+        return binarySearchRecursive(sortedArr, target, low, mid - 1);  // search the left half
+    }
+}
+```
+
+Both versions do the same O(log n) work; the iterative version avoids the (small, constant) overhead of extra stack frames per comparison, which is why binary search is commonly written iteratively in practice despite reading naturally as recursion.
+
+## Counting comparisons: seeing O(log n) directly
+
+Unlike Day 51's timing-based comparison (subject to JIT warmup and measurement noise), search algorithms make counting the *actual number of comparisons* easy and exact — a clean way to observe the O(n) vs O(log n) gap directly, without any of the timing noise from Day 50/51.
