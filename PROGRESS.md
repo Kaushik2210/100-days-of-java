@@ -57,3 +57,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 51 | 2026-09-09 | Big-O Notation & Algorithm Complexity Analysis | [notes](./notes/day51-big-o-notation.md) | [code](./src/day51/BigODemo.java) |
 | 52 | 2026-09-10 | Recursion Fundamentals & the Recursion Tree | [notes](./notes/day52-recursion-fundamentals.md) | [code](./src/day52/RecursionDemo.java) |
 | 53 | 2026-09-11 | Searching Algorithms: Linear & Binary Search | [notes](./notes/day53-linear-and-binary-search.md) | [code](./src/day53/SearchDemo.java) |
+| 54 | 2026-09-12 | Sorting Algorithms: Bubble, Selection & Insertion Sort | [notes](./notes/day54-bubble-selection-insertion-sort.md) | [code](./src/day54/SortingDemo.java) |
