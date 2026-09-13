@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class MergeSortDemo {
 
@@ -6,6 +7,39 @@ public class MergeSortDemo {
         int[] arr = {8, 3, 7, 4, 9, 1, 5, 2};
         mergeSort(arr, 0, arr.length - 1);
         System.out.println("mergeSort: " + Arrays.toString(arr));
+
+        int n = 20_000;
+        Random random = new Random(42); // fixed seed -- same "random" data on every run
+        int[] forMergeSort = new int[n];
+        for (int i = 0; i < n; i++) forMergeSort[i] = random.nextInt(1_000_000);
+        int[] forInsertionSort = Arrays.copyOf(forMergeSort, n); // identical data for a fair comparison
+
+        long start = System.nanoTime();
+        mergeSort(forMergeSort, 0, forMergeSort.length - 1);
+        long mergeMillis = (System.nanoTime() - start) / 1_000_000;
+
+        start = System.nanoTime();
+        insertionSort(forInsertionSort);
+        long insertionMillis = (System.nanoTime() - start) / 1_000_000;
+
+        System.out.println();
+        System.out.println("Sorting " + n + " random elements:");
+        System.out.println("mergeSort (O(n log n)): " + mergeMillis + " ms");
+        System.out.println("insertionSort (O(n^2)): " + insertionMillis + " ms");
+        System.out.println("Both produce the same sorted result: "
+            + Arrays.equals(forMergeSort, forInsertionSort));
+    }
+
+    static void insertionSort(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int key = arr[i];
+            int j = i - 1;
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
     }
 
     static void mergeSort(int[] arr, int left, int right) {
