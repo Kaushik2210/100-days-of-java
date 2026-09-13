@@ -45,3 +45,15 @@ void merge(int[] arr, int left, int mid, int right) {
 ```
 
 Using `<=` rather than `<` when the two front elements are equal is what makes merge sort **stable** (Day 54) — the element from the left (earlier) half is always taken first when there's a tie.
+
+## Space complexity: the cost of merge sort's speed
+
+Unlike Day 54's three sorts, which rearrange elements within the original array using O(1) extra space, merge sort's `merge` step allocates temporary arrays (`leftPart`, `rightPart`) to hold copies of each half before writing the merged result back — O(n) extra space at each level of recursion (though only O(n) total across the whole sort, since the temporary arrays at any one time don't all exist simultaneously). This is merge sort's real tradeoff: guaranteed O(n log n) time, in exchange for giving up the O(1)-space, in-place property that bubble/selection/insertion sort have.
+
+## Merge sort's consistency
+
+Merge sort is O(n log n) in the **best, worst, and average case alike** — unlike Day 54's sorts, its performance doesn't depend on how sorted the input already is, because it always fully divides and always fully merges regardless of the data's order. That consistency, combined with stability, is why merge sort (or a close relative of it) is used inside many standard-library sorts for objects — including `Collections.sort` and `Arrays.sort` for reference types in the JDK, which use a variant called Timsort that borrows merge sort's merging step.
+
+## Comparing against Day 54's sorts
+
+On a large, randomly-ordered array, merge sort's O(n log n) should noticeably outperform Day 54's O(n²) insertion sort — the same kind of measured comparison Day 51 used for O(n) vs O(n²), now applied to two real, general-purpose sorting algorithms.
