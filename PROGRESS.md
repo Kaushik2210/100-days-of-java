@@ -58,3 +58,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 52 | 2026-09-10 | Recursion Fundamentals & the Recursion Tree | [notes](./notes/day52-recursion-fundamentals.md) | [code](./src/day52/RecursionDemo.java) |
 | 53 | 2026-09-11 | Searching Algorithms: Linear & Binary Search | [notes](./notes/day53-linear-and-binary-search.md) | [code](./src/day53/SearchDemo.java) |
 | 54 | 2026-09-12 | Sorting Algorithms: Bubble, Selection & Insertion Sort | [notes](./notes/day54-bubble-selection-insertion-sort.md) | [code](./src/day54/SortingDemo.java) |
+| 55 | 2026-09-13 | Sorting Algorithms: Merge Sort | [notes](./notes/day55-merge-sort.md) | [code](./src/day55/MergeSortDemo.java) |
