@@ -41,3 +41,27 @@ void quickSort(int[] arr, int low, int high) {
 ```
 
 Unlike merge sort, quick sort rearranges elements **in place** within the original array — `partition` only ever swaps elements, allocating no auxiliary array — which is one of its main practical advantages.
+
+## Average case O(n log n), worst case O(n²)
+
+When the pivot splits the array roughly in half each time, quick sort recurses `log n` levels deep, doing O(n) partitioning work per level — the same O(n log n) shape as merge sort, and in practice quick sort is often *faster* than merge sort despite matching Big-O, thanks to better cache locality (Day 43) from working in place rather than allocating new arrays.
+
+But if the pivot is consistently the **smallest or largest** remaining element — which happens on an already-sorted (or reverse-sorted) array when always picking the last element as pivot — each partition only shaves off one element instead of splitting the array in half. That degrades to `n` levels of recursion doing O(n) work each, giving O(n²): quick sort's worst case, and precisely the input pattern this scheme is most vulnerable to.
+
+## Pivot selection strategies
+
+Since the worst case is triggered by a *specific, predictable* input pattern (already-sorted data), production implementations avoid always picking a fixed position:
+
+- **Random pivot** — pick a uniformly random element as the pivot each time. Makes the worst case exceedingly unlikely for any specific input, since an adversary would need to guess the random choices to trigger it.
+- **Median-of-three** — pick the median of the first, middle, and last elements. Cheap to compute, and reliably avoids the worst case on already- or nearly-sorted data specifically.
+
+Either strategy keeps quick sort's expected behavior at O(n log n) for essentially any real-world input, which is why quick sort (with one of these safeguards) remains a common default despite its theoretical O(n²) worst case.
+
+## Space complexity and stability
+
+Quick sort uses O(log n) extra space in the average case — not the O(1) of Day 54's sorts, since recursion itself needs stack frames (Day 42), but far less than merge sort's O(n) auxiliary arrays. Quick sort is generally **not stable** — the partition step can swap two equal elements past each other, the same instability issue Day 54 identified in selection sort.
+
+## Choosing between merge sort and quick sort
+
+- **Quick sort** — faster in practice for in-memory arrays (better cache locality, in-place, less overhead), the common default in JDK's primitive-array `Arrays.sort` (int[], double[], etc.).
+- **Merge sort** — guaranteed O(n log n) with no bad-input risk, and stable, so it's the better choice for object arrays (where the JDK's `Arrays.sort`/`Collections.sort` use a merge-sort variant, Timsort) and any situation where worst-case guarantees or stability genuinely matter.
