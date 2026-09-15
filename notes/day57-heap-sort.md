@@ -48,3 +48,17 @@ void heapSort(int[] arr) {
 ```
 
 After building the heap once (O(n) total, a known tighter bound than the naive O(n log n) estimate), each of the `n` extractions does an O(log n) `heapify` — giving O(n log n) overall, in every case, with zero extra arrays.
+
+## Heap sort's properties
+
+- **O(n log n) in the best, worst, and average case** — like merge sort (Day 55), and unlike quick sort's (Day 56) O(n²) worst case, since a heap's structure never depends on the input's original order the way quick sort's pivot choice does.
+- **O(1) extra space** — like Day 54's simple sorts, and unlike merge sort's O(n) auxiliary arrays; heap sort only ever swaps elements within the original array.
+- **Not stable** — the swaps during `heapify` and the root-to-end swap during extraction can easily move an element past an equal one, the same instability pattern seen in selection sort (Day 54) and quick sort (Day 56).
+
+Heap sort is the answer whenever a guaranteed worst case *and* O(1) space both matter simultaneously — a combination quick sort and merge sort each only give up one side of.
+
+## The comparison-sort lower bound: why O(n log n) is unbeatable
+
+Every general-purpose sort covered this week — merge, quick, heap — determines the final order using only pairwise comparisons (`is a < b?`). It turns out **no comparison-based sort can do better than O(n log n) in the worst case**, no matter how cleverly it's written. The reasoning: sorting `n` distinct elements has `n!` possible orderings, and each comparison can only distinguish between two outcomes (yes/no) — so a decision tree of comparisons needs at least `log₂(n!)` levels to tell all `n!` orderings apart. By Stirling's approximation, `log₂(n!)` is Θ(n log n), so any comparison sort needs at least that many comparisons in the worst case.
+
+This is why merge sort, quick sort, and heap sort all land on the same O(n log n) worst/average-case shape — they aren't failing to find something faster; O(n log n) is a hard floor for this *class* of algorithm. Beating it requires giving up general comparisons entirely and exploiting extra structure in the data — counting sort and radix sort do exactly this (by using the actual values as array indices rather than comparing them), achieving O(n) time under the right conditions, at the cost of only working for specific kinds of data (small-range integers, fixed-width keys) rather than arbitrary comparable elements.
