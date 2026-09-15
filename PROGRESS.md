@@ -60,3 +60,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 54 | 2026-09-12 | Sorting Algorithms: Bubble, Selection & Insertion Sort | [notes](./notes/day54-bubble-selection-insertion-sort.md) | [code](./src/day54/SortingDemo.java) |
 | 55 | 2026-09-13 | Sorting Algorithms: Merge Sort | [notes](./notes/day55-merge-sort.md) | [code](./src/day55/MergeSortDemo.java) |
 | 56 | 2026-09-14 | Sorting Algorithms: Quick Sort | [notes](./notes/day56-quick-sort.md) | [code](./src/day56/QuickSortDemo.java) |
+| 57 | 2026-09-15 | Sorting Algorithms: Heap Sort & the Comparison-Sort Lower Bound | [notes](./notes/day57-heap-sort.md) | [code](./src/day57/HeapSortDemo.java) |
