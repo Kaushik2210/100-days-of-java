@@ -61,3 +61,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 55 | 2026-09-13 | Sorting Algorithms: Merge Sort | [notes](./notes/day55-merge-sort.md) | [code](./src/day55/MergeSortDemo.java) |
 | 56 | 2026-09-14 | Sorting Algorithms: Quick Sort | [notes](./notes/day56-quick-sort.md) | [code](./src/day56/QuickSortDemo.java) |
 | 57 | 2026-09-15 | Sorting Algorithms: Heap Sort & the Comparison-Sort Lower Bound | [notes](./notes/day57-heap-sort.md) | [code](./src/day57/HeapSortDemo.java) |
+| 58 | 2026-09-16 | Custom Data Structures: Building a Singly Linked List | [notes](./notes/day58-singly-linked-list.md) | [code](./src/day58/SinglyLinkedListDemo.java) |
