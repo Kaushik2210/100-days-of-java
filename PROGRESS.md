@@ -65,3 +65,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 59 | 2026-09-17 | Doubly Linked Lists & Circular Linked Lists | [notes](./notes/day59-doubly-and-circular-linked-lists.md) | [code](./src/day59/DoublyLinkedListDemo.java) |
 | 60 | 2026-09-18 | Stacks: Array-Based & Linked-List-Based Implementations | [notes](./notes/day60-stacks.md) | [code](./src/day60/StackDemo.java) |
 | 61 | 2026-09-19 | Queues: Array, Linked List & Circular Queue | [notes](./notes/day61-queues.md) | [code](./src/day61/QueueDemo.java) |
+| 62 | 2026-09-20 | Deques & Priority Queues | [notes](./notes/day62-deques-and-priority-queues.md) | [code](./src/day62/DequeAndPriorityQueueDemo.java) |
