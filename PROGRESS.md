@@ -67,3 +67,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 61 | 2026-09-19 | Queues: Array, Linked List & Circular Queue | [notes](./notes/day61-queues.md) | [code](./src/day61/QueueDemo.java) |
 | 62 | 2026-09-20 | Deques & Priority Queues | [notes](./notes/day62-deques-and-priority-queues.md) | [code](./src/day62/DequeAndPriorityQueueDemo.java) |
 | 63 | 2026-09-21 | Trees: Binary Tree Basics & Traversals | [notes](./notes/day63-binary-trees-and-traversals.md) | [code](./src/day63/BinaryTreeDemo.java) |
+| 64 | 2026-09-22 | Binary Search Trees: Insert, Search, Delete | [notes](./notes/day64-binary-search-trees.md) | [code](./src/day64/BinarySearchTreeDemo.java) |
