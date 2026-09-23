@@ -19,6 +19,63 @@ public class AVLTreeDemo {
         System.out.print("inorder (still sorted): ");
         inorder(newRoot);
         System.out.println();
+
+        System.out.println();
+        System.out.println("Inserting 1..15 in already-sorted order (Day 64's worst case for a plain BST):");
+        AVLNode avlRoot = null;
+        for (int i = 1; i <= 15; i++) {
+            avlRoot = insert(avlRoot, i);
+        }
+        System.out.println("AVL tree height with 15 sorted inserts: " + height(avlRoot) + " (log2(15) ~ 3.9)");
+        System.out.print("inorder (still sorted): ");
+        inorder(avlRoot);
+        System.out.println();
+
+        BSTNode plainRoot = null;
+        for (int i = 1; i <= 15; i++) {
+            plainRoot = plainInsert(plainRoot, i);
+        }
+        System.out.println("plain BST height with 15 sorted inserts: " + plainHeight(plainRoot)
+            + " (degenerated into a linked list)");
+    }
+
+    static AVLNode insert(AVLNode node, int value) {
+        if (node == null) return new AVLNode(value);
+
+        if (value < node.value) {
+            node.left = insert(node.left, value);
+        } else if (value > node.value) {
+            node.right = insert(node.right, value);
+        } else {
+            return node;
+        }
+
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+        int balance = balanceFactor(node);
+
+        if (balance > 1 && value < node.left.value) return rotateRight(node);
+        if (balance < -1 && value > node.right.value) return rotateLeft(node);
+        if (balance > 1 && value > node.left.value) {
+            node.left = rotateLeft(node.left);
+            return rotateRight(node);
+        }
+        if (balance < -1 && value < node.right.value) {
+            node.right = rotateRight(node.right);
+            return rotateLeft(node);
+        }
+
+        return node;
+    }
+
+    static BSTNode plainInsert(BSTNode node, int value) {
+        if (node == null) return new BSTNode(value);
+        if (value < node.value) node.left = plainInsert(node.left, value);
+        else if (value > node.value) node.right = plainInsert(node.right, value);
+        return node;
+    }
+
+    static int plainHeight(BSTNode node) {
+        return node == null ? -1 : 1 + Math.max(plainHeight(node.left), plainHeight(node.right));
     }
 
     static int height(AVLNode node) {
@@ -70,6 +127,16 @@ class AVLNode {
     AVLNode right;
 
     AVLNode(int value) {
+        this.value = value;
+    }
+}
+
+class BSTNode {
+    int value;
+    BSTNode left;
+    BSTNode right;
+
+    BSTNode(int value) {
         this.value = value;
     }
 }
