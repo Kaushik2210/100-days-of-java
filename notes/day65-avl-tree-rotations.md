@@ -62,3 +62,48 @@ AVLNode rotateLeft(AVLNode x) {
 ```
 
 Both are O(1) — only a handful of pointers and two height updates change, regardless of how large the subtrees involved are. `rotateRight` and `rotateLeft` are mirror images of each other.
+
+## The four imbalance shapes
+
+An insert can throw a node's balance factor out of range in four distinct shapes, and each needs a different fix:
+
+- **LL (left-left)** — the new node landed in the left subtree of the left child. Fixed with a single `rotateRight` on the unbalanced node.
+- **RR (right-right)** — mirror of LL, in the right subtree of the right child. Fixed with a single `rotateLeft`.
+- **LR (left-right)** — the new node landed in the *right* subtree of the left child — a "zigzag." A single rotation can't fix this directly; first `rotateLeft` on the left child to turn it into an LL shape, then `rotateRight` on the original node.
+- **RL (right-left)** — mirror of LR: `rotateRight` on the right child first, then `rotateLeft` on the original node.
+
+## Insert with rebalancing
+
+Insertion follows Day 64's BST insert exactly, then — on the way back up the recursion — updates each node's height and checks its balance factor, applying the appropriate rotation if it's out of range.
+
+```java
+AVLNode insert(AVLNode node, int value) {
+    if (node == null) return new AVLNode(value);
+
+    if (value < node.value) {
+        node.left = insert(node.left, value);
+    } else if (value > node.value) {
+        node.right = insert(node.right, value);
+    } else {
+        return node; // duplicate -- ignore
+    }
+
+    node.height = 1 + Math.max(height(node.left), height(node.right));
+    int balance = balanceFactor(node);
+
+    if (balance > 1 && value < node.left.value) return rotateRight(node);                    // LL
+    if (balance < -1 && value > node.right.value) return rotateLeft(node);                    // RR
+    if (balance > 1 && value > node.left.value) {                                             // LR
+        node.left = rotateLeft(node.left);
+        return rotateRight(node);
+    }
+    if (balance < -1 && value < node.right.value) {                                           // RL
+        node.right = rotateRight(node.right);
+        return rotateLeft(node);
+    }
+
+    return node; // already balanced -- no rotation needed
+}
+```
+
+Because rebalancing happens after *every single insert*, the tree can never drift more than one level out of balance in the first place — there's no accumulated damage to repair later, only ever a local, O(1) fix at the specific node where the imbalance first appears. This is what guarantees O(log n) height (and therefore O(log n) insert/search/delete) no matter what order values arrive in — the exact failure mode Day 64 identified in a plain BST.
