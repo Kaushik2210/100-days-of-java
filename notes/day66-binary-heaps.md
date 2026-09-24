@@ -55,3 +55,45 @@ private void swap(int a, int b) {
 ```
 
 Since the tree is complete, its height is always O(log n) regardless of insertion order — unlike Day 64's plain BST, there's no degenerate shape to worry about, because the array-slot-filling rule leaves no room for one. `siftUp` walks at most that height, so `insert` is O(log n) worst case, guaranteed.
+
+## Extract: remove the root, then sift down
+
+The whole point of a heap is O(log n) access to the minimum, so `extractMin` removes and returns `data[0]`. But that leaves a hole at the root — the fix is to move the *last* element into that hole (keeping the tree complete) and then "sift it down," repeatedly swapping with its smaller child until the heap property holds again.
+
+```java
+int extractMin() {
+    if (isEmpty()) throw new IllegalStateException("Heap is empty");
+    int min = data[0];
+    size--;
+    data[0] = data[size]; // move the last element to the root, keeping the tree complete
+    siftDown(0);
+    return min;
+}
+
+private void siftDown(int i) {
+    while (true) {
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        int smallest = i;
+
+        if (left < size && data[left] < data[smallest]) smallest = left;
+        if (right < size && data[right] < data[smallest]) smallest = right;
+
+        if (smallest == i) break; // both children are already >= this node -- done
+        swap(i, smallest);
+        i = smallest; // continue checking from the new position
+    }
+}
+```
+
+`siftDown` here is exactly Day 57's `heapify`, applied to a resizable, standalone structure instead of one shrinking phase of an in-place sort — same swap-with-the-smaller-child logic, same O(log n) bound, same reason (the walk is bounded by the tree's guaranteed-O(log n) height).
+
+## Complexity summary
+
+- **`insert`** — O(log n): append, then sift up at most `height` levels.
+- **`extractMin` / `peek` the min** — O(log n) / O(1): the minimum is always at the root, but removing it costs the sift-down.
+- **Building a heap from `n` existing elements** — O(n) total (not O(n log n)) via `heapify` from the bottom up, exactly as Day 57's build-heap phase did; most nodes near the bottom of the tree need almost no sifting, which is what keeps the total below the naively-expected O(n log n).
+
+## Max-heap: flip the comparison
+
+A max-heap is the mirror image — every parent is *greater than or equal to* both children, largest at the root — built by flipping every `<`/`<=` comparison in `siftUp`/`siftDown` to `>`/`>=`. This is exactly how Day 62's `new PriorityQueue<>(Comparator.reverseOrder())` produces a max-priority queue from a min-heap-based class: same structure, inverted ordering.
