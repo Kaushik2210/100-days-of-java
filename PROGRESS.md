@@ -70,3 +70,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 64 | 2026-09-22 | Binary Search Trees: Insert, Search, Delete | [notes](./notes/day64-binary-search-trees.md) | [code](./src/day64/BinarySearchTreeDemo.java) |
 | 65 | 2026-09-23 | Balanced Trees: AVL Tree Rotations | [notes](./notes/day65-avl-tree-rotations.md) | [code](./src/day65/AVLTreeDemo.java) |
 | 66 | 2026-09-24 | Heaps: Binary Heap Implementation (Min-Heap & Max-Heap) | [notes](./notes/day66-binary-heaps.md) | [code](./src/day66/MinHeapDemo.java) |
+| 67 | 2026-09-25 | Hashing: Building a Hash Table with Collision Handling | [notes](./notes/day67-hash-tables.md) | [code](./src/day67/HashTableDemo.java) |
