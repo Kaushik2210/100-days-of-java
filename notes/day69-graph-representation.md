@@ -39,4 +39,45 @@ Adding the reverse edge (`to` back to `from`) is what makes this an *undirected*
 
 ## Space: proportional to actual connections
 
-An adjacency list uses O(V + E) space — one list entry per vertex, plus one list element per edge (two, for an undirected graph, since each edge appears in both endpoints' lists). For a **sparse** graph — one where most vertices connect to only a few others, like a typical road network or social graph — this is far more memory-efficient than reserving space for every *possible* pair of vertices, which is exactly what Day 69's other representation does.
+An adjacency list uses O(V + E) space — one list entry per vertex, plus one list element per edge (two, for an undirected graph, since each edge appears in both endpoints' lists). For a **sparse** graph — one where most vertices connect to only a few others, like a typical road network or social graph — this is far more memory-efficient than reserving space for every *possible* pair of vertices, which is exactly what the adjacency matrix below does.
+
+## Adjacency matrix: a grid of connections
+
+The other common representation is a `V × V` grid, where `matrix[i][j]` is `true` (or a weight, for a weighted graph) if an edge connects vertex `i` to vertex `j`.
+
+```java
+class MatrixGraph {
+    private boolean[][] matrix;
+    private int vertexCount;
+
+    MatrixGraph(int vertexCount) {
+        this.vertexCount = vertexCount;
+        matrix = new boolean[vertexCount][vertexCount];
+    }
+
+    void addEdge(int from, int to) {
+        matrix[from][to] = true;
+        matrix[to][from] = true; // omit for a directed graph
+    }
+
+    boolean hasEdge(int from, int to) {
+        return matrix[from][to]; // O(1) -- direct array access, no list to scan
+    }
+
+    List<Integer> neighborsOf(int vertex) {
+        List<Integer> neighbors = new ArrayList<>();
+        for (int i = 0; i < vertexCount; i++) { // must check every possible vertex, even non-neighbors
+            if (matrix[vertex][i]) neighbors.add(i);
+        }
+        return neighbors;
+    }
+}
+```
+
+## Comparing the two
+
+- **Space** — adjacency list: O(V + E), scales with actual edges. Adjacency matrix: always O(V²), regardless of how many edges actually exist — for a sparse graph, that's mostly wasted `false` cells.
+- **"Is there an edge between A and B?"** — adjacency matrix: O(1), a direct array lookup. Adjacency list: O(degree of A), since it has to scan A's neighbor list.
+- **"What are all of A's neighbors?"** — adjacency list: O(degree of A), just returns the list directly. Adjacency matrix: O(V), since every column in A's row has to be checked, even the ones with no edge.
+
+**Rule of thumb**: adjacency list for sparse graphs (most real-world graphs — a social network, a road map, a dependency graph) or when neighbor iteration (Day 70's BFS/DFS) is the common operation; adjacency matrix for dense graphs or when "is there an edge?" needs to be as fast as possible and the O(V²) memory is affordable. Days 70, 81, and 83–85's algorithms all default to the adjacency list for exactly this reason.
