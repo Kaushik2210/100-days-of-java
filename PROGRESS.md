@@ -74,3 +74,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 68 | 2026-09-26 | Tries: Prefix Trees for String Search | [notes](./notes/day68-tries.md) | [code](./src/day68/TrieDemo.java) |
 | 69 | 2026-09-27 | Graphs: Representation (Adjacency List & Adjacency Matrix) | [notes](./notes/day69-graph-representation.md) | [code](./src/day69/GraphDemo.java) |
 | 70 | 2026-09-28 | Graph Traversal: BFS & DFS | [notes](./notes/day70-graph-traversal-bfs-dfs.md) | [code](./src/day70/GraphTraversalDemo.java) |
+| 71 | 2026-09-29 | Two Pointers Technique | [notes](./notes/day71-two-pointers.md) | [code](./src/day71/TwoPointersDemo.java) |
