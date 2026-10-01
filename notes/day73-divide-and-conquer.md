@@ -36,4 +36,4 @@ long fastPower(long base, int exponent) {
 }
 ```
 
-`fastPower(2, 10)` makes only 4 recursive calls (exponents 10 → 5 → 2 → 1 → 0) instead of 10 sequential multiplications — the same halving-the-problem-size idea as binary search, applied to exponentiation instead of a sorted array.
+`fastPower(2, 10)` makes only 5 calls total (exponents 10 → 5 → 2 → 1 → 0, including the base case) instead of 10 sequential multiplications — the same halving-the-problem-size idea as binary search, applied to exponentiation instead of a sorted array.
