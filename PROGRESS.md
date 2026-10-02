@@ -77,3 +77,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 71 | 2026-09-29 | Two Pointers Technique | [notes](./notes/day71-two-pointers.md) | [code](./src/day71/TwoPointersDemo.java) |
 | 72 | 2026-09-30 | Sliding Window Technique | [notes](./notes/day72-sliding-window.md) | [code](./src/day72/SlidingWindowDemo.java) |
 | 73 | 2026-10-01 | Divide and Conquer Strategy | [notes](./notes/day73-divide-and-conquer.md) | [code](./src/day73/DivideAndConquerDemo.java) |
+| 74 | 2026-10-02 | Greedy Algorithms | [notes](./notes/day74-greedy-algorithms.md) | [code](./src/day74/GreedyDemo.java) |
