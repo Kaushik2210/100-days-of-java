@@ -38,3 +38,38 @@ void permute(int[] nums, List<Integer> current, boolean[] used, List<List<Intege
 The `new ArrayList<>(current)` copy matters: `current` is one list that gets mutated for the entire run, so storing a reference to it directly would leave every saved result pointing at the same list — all of them ending up empty once the recursion fully unwinds.
 
 There are `n!` permutations, so any algorithm that generates all of them is at least O(n!) — backtracking doesn't beat that, it just generates them systematically without duplicates or gaps.
+
+## Pruning: the real power of backtracking
+
+Permutations need every branch, so nothing can be skipped. Many problems are different: a partial solution can be recognized as *already impossible* long before it's complete, and the whole subtree below it can be abandoned immediately. That early abandonment is called **pruning**, and it's what makes backtracking dramatically faster than blindly enumerating every complete candidate and checking it afterwards.
+
+## N-Queens: place N queens on an N×N board with none attacking another
+
+Queens attack along their row, column, and both diagonals. Place one queen per row, choosing a column for each; before placing, check whether that square is already under attack by an earlier queen — if so, skip it without exploring anything beneath it.
+
+```java
+int countNQueens(int n) {
+    return place(0, n, new boolean[n], new boolean[2 * n], new boolean[2 * n]);
+}
+
+private int place(int row, int n, boolean[] columns, boolean[] diagonals, boolean[] antiDiagonals) {
+    if (row == n) return 1; // all n queens placed without conflict -- one complete solution
+
+    int count = 0;
+    for (int col = 0; col < n; col++) {
+        int diagonal = row - col + n;   // cells on the same "\" diagonal share row - col
+        int antiDiagonal = row + col;   // cells on the same "/" diagonal share row + col
+
+        if (columns[col] || diagonals[diagonal] || antiDiagonals[antiDiagonal]) continue; // prune: attacked square
+
+        columns[col] = diagonals[diagonal] = antiDiagonals[antiDiagonal] = true;      // choose
+        count += place(row + 1, n, columns, diagonals, antiDiagonals);                 // explore
+        columns[col] = diagonals[diagonal] = antiDiagonals[antiDiagonal] = false;     // un-choose
+    }
+    return count;
+}
+```
+
+The three boolean arrays make the "is this square attacked?" check O(1) instead of re-scanning every previously placed queen, using the arithmetic fact that all squares on one diagonal share the same `row - col` value, and all squares on one anti-diagonal share the same `row + col`.
+
+Without pruning, brute force would consider every way to put `n` queens on `n²` squares — an astronomically larger space. Pruning cuts each branch the moment a placement conflicts, so the search only ever explores placements that are *still valid so far*. It remains exponential in the worst case, but is vastly faster in practice, which is why N-Queens is the standard first example of what backtracking buys.
