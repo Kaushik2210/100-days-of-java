@@ -54,3 +54,32 @@ Same O(n) time, but no recursion — so no call-stack depth to worry about (Day 
 - **Tabulation** — no recursion overhead or stack-depth risk, and it makes the time and space cost obvious from the loop structure. It requires working out the dependency order up front.
 
 Both give the same answer with the same asymptotic time; the choice is mostly about which is easier to get right for the problem at hand.
+
+## Closing Day 74's loose end: coin change with DP
+
+Greedy failed on `{1, 3, 4}` for amount 6 because committing to the biggest coin first locked out the better answer. DP never commits early. It defines `minCoins[a]` as the true fewest coins needed to make amount `a`, and fills the table from `0` upward. For each amount, it tries *every* coin and keeps whichever leaves the cheapest remainder:
+
+```java
+int minCoins(int[] coins, int amount) {
+    int[] table = new int[amount + 1];
+    Arrays.fill(table, Integer.MAX_VALUE);
+    table[0] = 0; // zero coins make amount 0
+
+    for (int a = 1; a <= amount; a++) {
+        for (int coin : coins) {
+            if (coin <= a && table[a - coin] != Integer.MAX_VALUE) {
+                table[a] = Math.min(table[a], table[a - coin] + 1); // use this coin on top of the best answer for what's left
+            }
+        }
+    }
+    return table[amount] == Integer.MAX_VALUE ? -1 : table[amount]; // -1 if the amount can't be made at all
+}
+```
+
+For `{1, 3, 4}` and amount 6, the table fills as `[0, 1, 2, 1, 1, 2, 2]`. At `a = 6`, the coin `3` gives `table[3] + 1 = 2`, beating the coin `4` path (`table[2] + 1 = 3`). The cheapest option is found because every coin is considered at every amount, not just the largest one.
+
+This has both required properties. Subproblems overlap (the best answer for amount 3 feeds amounts 4, 6, 7, and more), and the structure is optimal (the best answer for `a` is one coin plus the best answer for `a - coin`). The cost is O(amount × number of coins) time and O(amount) space, polynomial where Day 74's brute-force check was exponential.
+
+## The general recipe
+
+Most DP problems follow the same steps: define precisely what each table entry means, write the recurrence relating an entry to smaller ones, set the base cases, then decide the fill order. Days 77 and 78 apply exactly this recipe to the knapsack problem and to longest common subsequence and edit distance.
