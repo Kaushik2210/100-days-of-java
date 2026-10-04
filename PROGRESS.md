@@ -79,3 +79,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 73 | 2026-10-01 | Divide and Conquer Strategy | [notes](./notes/day73-divide-and-conquer.md) | [code](./src/day73/DivideAndConquerDemo.java) |
 | 74 | 2026-10-02 | Greedy Algorithms | [notes](./notes/day74-greedy-algorithms.md) | [code](./src/day74/GreedyDemo.java) |
 | 75 | 2026-10-03 | Backtracking: N-Queens & Permutations | [notes](./notes/day75-backtracking.md) | [code](./src/day75/BacktrackingDemo.java) |
+| 76 | 2026-10-04 | Dynamic Programming: Memoization & Tabulation Basics | [notes](./notes/day76-dynamic-programming-basics.md) | [code](./src/day76/DynamicProgrammingDemo.java) |
