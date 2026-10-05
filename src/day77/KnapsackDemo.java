@@ -33,6 +33,66 @@ public class KnapsackDemo {
         }
         System.out.println("DP vs exhaustive search over " + trials + " random instances: " + mismatches + " mismatches");
         System.out.println("greedy-by-ratio was suboptimal in " + greedyWrong + " of those " + trials + " instances");
+
+        System.out.println();
+        System.out.println("1D space-optimized version on the example = " + knapsack1D(weights, values, capacity));
+
+        int oneDimMismatches = 0;
+        int unboundedMismatches = 0;
+        for (int t = 0; t < trials; t++) {
+            int n = 1 + random.nextInt(6);
+            int[] w = new int[n];
+            int[] v = new int[n];
+            for (int i = 0; i < n; i++) {
+                w[i] = 1 + random.nextInt(8);
+                v[i] = 1 + random.nextInt(15);
+            }
+            int cap = random.nextInt(20);
+
+            if (knapsack1D(w, v, cap) != knapsack(w, v, cap)) oneDimMismatches++;
+            if (unboundedKnapsack(w, v, cap) != bruteForceUnbounded(w, v, cap)) unboundedMismatches++;
+        }
+        System.out.println("1D vs 2D over " + trials + " random instances: " + oneDimMismatches + " mismatches");
+        System.out.println("unbounded DP vs exhaustive recursion over " + trials + " random instances: "
+            + unboundedMismatches + " mismatches");
+
+        System.out.println();
+        int[] oneItemWeight = {3};
+        int[] oneItemValue = {5};
+        System.out.println("one item (weight 3, value 5), capacity 9:");
+        System.out.println("  0/1 knapsack (take it once)        = " + knapsack1D(oneItemWeight, oneItemValue, 9));
+        System.out.println("  unbounded (take it up to 3 times)  = " + unboundedKnapsack(oneItemWeight, oneItemValue, 9));
+    }
+
+    static int knapsack1D(int[] weights, int[] values, int capacity) {
+        int[] dp = new int[capacity + 1];
+        for (int i = 0; i < weights.length; i++) {
+            for (int w = capacity; w >= weights[i]; w--) { // downward: each item is used at most once
+                dp[w] = Math.max(dp[w], values[i] + dp[w - weights[i]]);
+            }
+        }
+        return dp[capacity];
+    }
+
+    static int unboundedKnapsack(int[] weights, int[] values, int capacity) {
+        int[] dp = new int[capacity + 1];
+        for (int i = 0; i < weights.length; i++) {
+            for (int w = weights[i]; w <= capacity; w++) { // upward: dp[w - weight] may already include this item
+                dp[w] = Math.max(dp[w], values[i] + dp[w - weights[i]]);
+            }
+        }
+        return dp[capacity];
+    }
+
+    // exhaustive recursion with unlimited copies, used only to cross-check the unbounded DP
+    static int bruteForceUnbounded(int[] weights, int[] values, int capacity) {
+        int best = 0;
+        for (int i = 0; i < weights.length; i++) {
+            if (weights[i] <= capacity) {
+                best = Math.max(best, values[i] + bruteForceUnbounded(weights, values, capacity - weights[i]));
+            }
+        }
+        return best;
     }
 
     static int knapsack(int[] weights, int[] values, int capacity) {

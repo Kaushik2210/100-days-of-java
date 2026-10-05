@@ -83,7 +83,7 @@ int unboundedKnapsack(int[] weights, int[] values, int capacity) {
 }
 ```
 
-This is exactly the shape of Day 76's coin change. Coins are items with unlimited supply, "value" is the (negated) coin count being minimized, and capacity is the target amount. Seeing coin change as unbounded knapsack is a good example of DP problems repeating a small number of underlying patterns under different disguises.
+This is closely related to Day 76's coin change: coins are items with unlimited supply, and the target amount plays the role of capacity. There are two differences. Coin change *minimizes* the number of items rather than maximizing a value, and it requires the amount to be hit **exactly**, whereas knapsack is happy to leave some capacity unused. The loop structure is the same, though, and seeing that is a good example of DP problems repeating a small number of underlying patterns under different disguises.
 
 ## Choosing between the variants
 
