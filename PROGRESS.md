@@ -80,3 +80,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 74 | 2026-10-02 | Greedy Algorithms | [notes](./notes/day74-greedy-algorithms.md) | [code](./src/day74/GreedyDemo.java) |
 | 75 | 2026-10-03 | Backtracking: N-Queens & Permutations | [notes](./notes/day75-backtracking.md) | [code](./src/day75/BacktrackingDemo.java) |
 | 76 | 2026-10-04 | Dynamic Programming: Memoization & Tabulation Basics | [notes](./notes/day76-dynamic-programming-basics.md) | [code](./src/day76/DynamicProgrammingDemo.java) |
+| 77 | 2026-10-05 | Dynamic Programming: Knapsack Problems | [notes](./notes/day77-knapsack-problems.md) | [code](./src/day77/KnapsackDemo.java) |
