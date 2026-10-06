@@ -56,3 +56,46 @@ String lcsString(String a, String b, int[][] dp) {
 ```
 
 When several different subsequences tie for longest, the traceback just picks one, so an LCS is not unique even though its length is.
+
+## Edit distance (Levenshtein distance)
+
+Edit distance is the minimum number of single-character edits needed to turn one string into another, where an edit is an **insertion**, a **deletion**, or a **substitution**. It is what powers spell-checker suggestions ("did you mean...") and fuzzy matching.
+
+Let `dp[i][j]` be the edit distance between the **first `i` characters of `a`** and the **first `j` characters of `b`**:
+
+- If `a[i-1] == b[j-1]`, no edit is needed for this pair: `dp[i][j] = dp[i-1][j-1]`.
+- Otherwise take the cheapest of three edits, plus one for the edit itself:
+  - **Substitute** `a[i-1]` with `b[j-1]`: `dp[i-1][j-1] + 1`
+  - **Delete** `a[i-1]`: `dp[i-1][j] + 1`
+  - **Insert** `b[j-1]` into `a`: `dp[i][j-1] + 1`
+- Base cases: turning an empty string into a string of length `j` takes `j` insertions, and turning a string of length `i` into an empty string takes `i` deletions. So `dp[0][j] = j` and `dp[i][0] = i`.
+
+```java
+int editDistance(String a, String b) {
+    int[][] dp = new int[a.length() + 1][b.length() + 1];
+
+    for (int i = 0; i <= a.length(); i++) dp[i][0] = i; // delete everything
+    for (int j = 0; j <= b.length(); j++) dp[0][j] = j; // insert everything
+
+    for (int i = 1; i <= a.length(); i++) {
+        for (int j = 1; j <= b.length(); j++) {
+            if (a.charAt(i - 1) == b.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = 1 + Math.min(dp[i - 1][j - 1],            // substitute
+                               Math.min(dp[i - 1][j],                // delete
+                                        dp[i][j - 1]));              // insert
+            }
+        }
+    }
+    return dp[a.length()][b.length()];
+}
+```
+
+The classic example: `"kitten"` to `"sitting"` takes 3 edits (substitute `k` with `s`, substitute `e` with `i`, insert `g`). Time and space are O(m × n), like LCS.
+
+## How the two problems relate
+
+LCS and edit distance are close cousins. If **substitution is disallowed** (only insertions and deletions), the minimum number of edits is exactly `m + n - 2 × LCS(a, b)`. The characters in the LCS are the ones that never need touching; everything else in `a` gets deleted and everything else in `b` gets inserted. Allowing substitution as a single edit can only make the distance the same or smaller, since a substitution does the work of a deletion plus an insertion in one step.
+
+Both problems also share the table-filling pattern from this day: a 2D table over prefixes of two sequences, each cell computed from its left, upper, and upper-left neighbors. DP over two sequences, over a sequence and a capacity (Day 77), and over a single index (Day 76) are the three table shapes that cover a large share of the DP problems you will meet.
