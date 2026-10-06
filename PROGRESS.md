@@ -81,3 +81,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 75 | 2026-10-03 | Backtracking: N-Queens & Permutations | [notes](./notes/day75-backtracking.md) | [code](./src/day75/BacktrackingDemo.java) |
 | 76 | 2026-10-04 | Dynamic Programming: Memoization & Tabulation Basics | [notes](./notes/day76-dynamic-programming-basics.md) | [code](./src/day76/DynamicProgrammingDemo.java) |
 | 77 | 2026-10-05 | Dynamic Programming: Knapsack Problems | [notes](./notes/day77-knapsack-problems.md) | [code](./src/day77/KnapsackDemo.java) |
+| 78 | 2026-10-06 | Dynamic Programming: Longest Common Subsequence & Edit Distance | [notes](./notes/day78-lcs-and-edit-distance.md) | [code](./src/day78/StringDpDemo.java) |
