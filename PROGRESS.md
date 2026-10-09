@@ -84,3 +84,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 78 | 2026-10-06 | Dynamic Programming: Longest Common Subsequence & Edit Distance | [notes](./notes/day78-lcs-and-edit-distance.md) | [code](./src/day78/StringDpDemo.java) |
 | 79 | 2026-10-07 | Bit Manipulation Techniques | [notes](./notes/day79-bit-manipulation.md) | [code](./src/day79/BitManipulationDemo.java) |
 | 80 | 2026-10-08 | Union-Find (Disjoint Set) Data Structure | [notes](./notes/day80-union-find.md) | [code](./src/day80/UnionFindDemo.java) |
+| 81 | 2026-10-09 | Shortest Path: Dijkstra's Algorithm | [notes](./notes/day81-dijkstra.md) | [code](./src/day81/DijkstraDemo.java) |
