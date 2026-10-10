@@ -85,3 +85,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 79 | 2026-10-07 | Bit Manipulation Techniques | [notes](./notes/day79-bit-manipulation.md) | [code](./src/day79/BitManipulationDemo.java) |
 | 80 | 2026-10-08 | Union-Find (Disjoint Set) Data Structure | [notes](./notes/day80-union-find.md) | [code](./src/day80/UnionFindDemo.java) |
 | 81 | 2026-10-09 | Shortest Path: Dijkstra's Algorithm | [notes](./notes/day81-dijkstra.md) | [code](./src/day81/DijkstraDemo.java) |
+| 82 | 2026-10-10 | Shortest Path: Bellman-Ford Algorithm | [notes](./notes/day82-bellman-ford.md) | [code](./src/day82/BellmanFordDemo.java) |
