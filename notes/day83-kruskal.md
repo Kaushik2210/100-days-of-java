@@ -45,3 +45,24 @@ int kruskal(int n, int[][] edges, List<int[]> chosen) {
 The justification is the **cut property**: split the vertices into any two non-empty groups. Among the edges crossing between the two groups, the cheapest one belongs to some minimum spanning tree. Kruskal's rule applies this over and over. When it considers the cheapest remaining edge that joins two different components, that edge is the cheapest one crossing the cut between "this component" and "everything else," so keeping it can never rule out an optimal answer.
 
 This is the same kind of argument as Day 74's activity selection (an exchange argument), and it is exactly what coin change lacked, which is why greedy was wrong there and is right here.
+
+## Complexity
+
+- **Sorting the edges** costs O(E log E). This dominates.
+- **The loop** does at most `E` `find`/`union` operations, each nearly constant time thanks to Day 80's two optimizations, so it contributes roughly O(E × α(V)), which is far below the sorting cost.
+
+Total: **O(E log E)**. Since a simple graph has at most `V²` edges, `log E` is at most `2 log V`, so this is the same as O(E log V). Space is O(V + E): the edge list plus the union-find arrays.
+
+## Disconnected graphs: a spanning forest
+
+If the graph is not connected, no spanning tree exists, because no set of edges can reach every vertex. Kruskal's algorithm still behaves sensibly: it runs out of useful edges before collecting `V - 1` of them and produces a **minimum spanning forest**, one minimum spanning tree per connected component. A graph with `C` components ends up with `V - C` edges. The `chosen.size() == n - 1` early exit simply never triggers, and the loop runs through the whole sorted list.
+
+This gives a cheap connectivity test as a by-product: the graph is connected exactly when Kruskal keeps `V - 1` edges.
+
+## Ties and uniqueness
+
+When several edges share the same weight, the sort order between them is arbitrary, so different runs (or different sort implementations) can pick different edges. The **total weight is always the same**, but the tree itself may differ. If every edge weight is distinct, the MST is unique.
+
+## Kruskal vs Prim
+
+Day 84's Prim's algorithm solves the same problem from a different angle: instead of sorting all edges and merging components, it grows a *single* tree outward from a start vertex, always adding the cheapest edge that reaches a new vertex. The two produce trees of equal total weight. Kruskal tends to be simpler when the graph arrives as an edge list and is sparse; Prim tends to do better on dense graphs stored as adjacency lists.
