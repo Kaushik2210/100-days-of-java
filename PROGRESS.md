@@ -88,3 +88,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 82 | 2026-10-10 | Shortest Path: Bellman-Ford Algorithm | [notes](./notes/day82-bellman-ford.md) | [code](./src/day82/BellmanFordDemo.java) |
 | 83 | 2026-10-11 | Minimum Spanning Tree: Kruskal's Algorithm | [notes](./notes/day83-kruskal.md) | [code](./src/day83/KruskalDemo.java) |
 | 84 | 2026-10-12 | Minimum Spanning Tree: Prim's Algorithm | [notes](./notes/day84-prim.md) | [code](./src/day84/PrimDemo.java) |
+| 85 | 2026-10-13 | Topological Sorting & Cycle Detection | [notes](./notes/day85-topological-sort.md) | [code](./src/day85/TopologicalSortDemo.java) |
