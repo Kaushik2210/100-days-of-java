@@ -51,3 +51,59 @@ List<Integer> kahn(List<List<Integer>> graph) {
 Vertices on a cycle each have an incoming edge from another vertex on that cycle, so their in-degrees can never drop to `0` and they never enter the queue. When the loop ends, if the output holds fewer than `n` vertices, the leftover vertices are exactly the ones that are on a cycle or depend on one. The check is simply `order.size() < n`.
 
 This runs in **O(V + E)**: every vertex is enqueued at most once, and every edge is touched once when its source vertex is processed.
+
+## The DFS approach: reverse finishing order
+
+Day 70's DFS gives a second way to topologically sort. Run a depth-first search from every unvisited vertex, and record each vertex at the moment it **finishes**, meaning after all of its descendants have been explored. Reading the finished list backward gives a topological order.
+
+Why that works: a vertex only finishes after everything reachable from it has finished first. So for any edge `u → v`, `v` finishes before `u` does, which puts `u` ahead of `v` once the list is reversed.
+
+## Cycle detection in a directed graph: three colors
+
+To detect cycles during the DFS, each vertex needs one of three states rather than a plain visited flag:
+
+- **WHITE** — not yet discovered.
+- **GRAY** — currently on the recursion stack, still being explored.
+- **BLACK** — fully finished.
+
+An edge that leads to a **GRAY** vertex goes back to something still in progress, which means a cycle. An edge to a BLACK vertex is harmless: that vertex was fully explored and cannot lead back here.
+
+```java
+// returns false if a cycle is found; otherwise fills `finished` in finishing order
+boolean dfsVisit(List<List<Integer>> graph, int u, int[] color, List<Integer> finished) {
+    color[u] = GRAY;
+    for (int v : graph.get(u)) {
+        if (color[v] == GRAY) return false;                       // back edge: u points to an ancestor on the stack
+        if (color[v] == WHITE && !dfsVisit(graph, v, color, finished)) return false;
+    }
+    color[u] = BLACK;
+    finished.add(u);                                              // postorder: recorded after all descendants
+    return true;
+}
+
+List<Integer> topologicalOrderDfs(List<List<Integer>> graph) { // returns an empty list if there is a cycle
+    int n = graph.size();
+    int[] color = new int[n];
+    List<Integer> finished = new ArrayList<>();
+    for (int v = 0; v < n; v++) {
+        if (color[v] == WHITE && !dfsVisit(graph, v, color, finished)) return new ArrayList<>();
+    }
+    Collections.reverse(finished);
+    return finished;
+}
+```
+
+A self-loop `u → u` is caught by the same rule: while exploring `u` (GRAY), the edge back to `u` finds a GRAY vertex.
+
+## Why Day 80's Union-Find does not work here
+
+Day 80 used Union-Find to detect cycles, and it is tempting to reuse it. It only works for **undirected** graphs. Union-Find only knows that two vertices are connected, not which direction the edges point.
+
+Consider `a → b`, `a → c`, `b → c`. This is a perfectly good DAG (order: `a, b, c`). But treated as undirected, the three edges form a triangle, and Union-Find would report a cycle. Directed cycles need an algorithm that respects direction: Kahn's in-degree counting or the three-color DFS.
+
+## Choosing between the two
+
+- **Kahn's** — iterative (no recursion depth to worry about, Day 42), and naturally processes things "layer by layer," which suits scheduling problems where tasks that become ready at the same time can run in parallel.
+- **DFS** — a few lines when you already have DFS machinery, and the finishing times are useful in other algorithms. The recursion depth can reach `V` on a long dependency chain.
+
+Both are O(V + E). Neither produces a unique answer in general; any order satisfying every edge is valid. A topological order is unique only when the DAG contains a path through all vertices.
