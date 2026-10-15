@@ -70,3 +70,44 @@ private void update(int node, int l, int r, int idx, int value) {
 ```
 
 This is **O(log n)**.
+
+## Range query
+
+A query for `[ql, qr]` asks, at each node covering `[l, r]`, one of three questions:
+
+1. **No overlap** (`qr < l` or `r < ql`): this segment contributes nothing. Return the identity value, `0` for a sum.
+2. **Total overlap** (`ql ≤ l` and `r ≤ qr`): the whole segment is inside the query, so the node's stored value is exactly the answer for it. Return it without looking further down.
+3. **Partial overlap**: the query covers some of this segment but not all. Ask both children and combine their answers.
+
+```java
+long query(int ql, int qr) { return query(1, 0, n - 1, ql, qr); }
+
+private long query(int node, int l, int r, int ql, int qr) {
+    if (qr < l || r < ql) return 0;                  // no overlap
+    if (ql <= l && r <= qr) return tree[node];       // total overlap: use the precomputed sum
+    int mid = (l + r) / 2;
+    return query(2 * node, l, mid, ql, qr)           // partial overlap: split the question
+         + query(2 * node + 1, mid + 1, r, ql, qr);
+}
+```
+
+The query range is effectively decomposed into a small number of whole tree segments. At every level of the tree, at most two nodes can be only *partially* covered (the ones containing the query's two boundaries), and everything else either misses entirely or is covered entirely and stops immediately. That caps the work at a constant number of nodes per level, so a query is **O(log n)**.
+
+## Why this is the right tool
+
+Both operations touch only a thin slice of a balanced tree of height about `log₂ n`. With `n = 1,000,000` that is roughly 20 levels instead of a million elements, for both queries and updates. A segment tree is what you reach for when an array has to answer range questions *while it is also changing*.
+
+## Beyond sums: any associative operation
+
+Nothing above depends on the operation being addition. The combine step `left + right` can be replaced with any **associative** operation that has an identity value:
+
+| Operation | Combine | Identity (for "no overlap") |
+|---|---|---|
+| Sum | `a + b` | `0` |
+| Minimum | `Math.min(a, b)` | `Integer.MAX_VALUE` |
+| Maximum | `Math.max(a, b)` | `Integer.MIN_VALUE` |
+| GCD | `gcd(a, b)` | `0` |
+
+Associativity matters because the tree regroups the elements: a query range is stitched together from node segments, so `(a ∘ b) ∘ c` must equal `a ∘ (b ∘ c)`. The operation does *not* need to be commutative as long as left-to-right order is respected, which the structure does naturally.
+
+Passing the combine step in as a function (Day 29's functional interfaces) lets one class serve every one of these. A "range minimum query" tree is the same code with a different lambda and identity.
