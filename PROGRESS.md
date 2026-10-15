@@ -90,3 +90,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 84 | 2026-10-12 | Minimum Spanning Tree: Prim's Algorithm | [notes](./notes/day84-prim.md) | [code](./src/day84/PrimDemo.java) |
 | 85 | 2026-10-13 | Topological Sorting & Cycle Detection | [notes](./notes/day85-topological-sort.md) | [code](./src/day85/TopologicalSortDemo.java) |
 | 86 | 2026-10-14 | Graph Coloring & Bipartite Graph Checking | [notes](./notes/day86-graph-coloring-bipartite.md) | [code](./src/day86/ColoringDemo.java) |
+| 87 | 2026-10-15 | Advanced Trees: Segment Trees | [notes](./notes/day87-segment-trees.md) | [code](./src/day87/SegmentTreeDemo.java) |
