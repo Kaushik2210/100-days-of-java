@@ -111,3 +111,41 @@ Nothing above depends on the operation being addition. The combine step `left + 
 Associativity matters because the tree regroups the elements: a query range is stitched together from node segments, so `(a ∘ b) ∘ c` must equal `a ∘ (b ∘ c)`. The operation does *not* need to be commutative as long as left-to-right order is respected, which the structure does naturally.
 
 Passing the combine step in as a function (Day 29's functional interfaces) lets one class serve every one of these. A "range minimum query" tree is the same code with a different lambda and identity.
+
+## Range updates and lazy propagation
+
+The tree so far changes one element at a time. Suppose the update is "add `delta` to *every* element in `[ql, qr]`". Applying it as a loop of point updates costs O(n log n) in the worst case, which gives away the whole benefit.
+
+**Lazy propagation** fixes this by *postponing* work. When an update fully covers a node's segment, the node's own sum is corrected right away (`sum += delta × segmentLength`), but the update is **not** pushed into the children. Instead the node records a pending `lazy` amount saying "my whole segment still owes this much to everything below me." That pending amount is only pushed down when a later operation actually has to look inside the node.
+
+```java
+private void apply(int node, int l, int r, long delta) {
+    sum[node] += delta * (r - l + 1);   // correct this node's own total immediately
+    lazy[node] += delta;                // remember that the children are behind by this much
+}
+
+private void push(int node, int l, int r) {
+    if (lazy[node] == 0) return;
+    int mid = (l + r) / 2;
+    apply(2 * node, l, mid, lazy[node]);          // hand the debt to the children...
+    apply(2 * node + 1, mid + 1, r, lazy[node]);
+    lazy[node] = 0;                                // ...and clear it here
+}
+
+private void rangeAdd(int node, int l, int r, int ql, int qr, long delta) {
+    if (qr < l || r < ql) return;                 // no overlap
+    if (ql <= l && r <= qr) {                     // total overlap: update this node only, defer the rest
+        apply(node, l, r, delta);
+        return;
+    }
+    push(node, l, r);                              // partial overlap: children must be current before changing them
+    int mid = (l + r) / 2;
+    rangeAdd(2 * node, l, mid, ql, qr, delta);
+    rangeAdd(2 * node + 1, mid + 1, r, ql, qr, delta);
+    sum[node] = sum[2 * node] + sum[2 * node + 1];
+}
+```
+
+`query` follows the same discipline: before descending into a partially covered node, call `push` so the children it reads are up to date.
+
+With laziness, both range updates and range queries are **O(log n)**. The cost of the trick is extra memory (a second array) and extra care: forgetting a `push` before descending is the classic bug, and it produces answers that are wrong only for some combinations of operations.
