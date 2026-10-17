@@ -61,3 +61,47 @@ int[] buildLps(String p) {
     return lps;
 }
 ```
+
+## The search
+
+Searching uses the identical pattern. Keep a text index `i` and a count `k` of how many pattern characters are currently matched. On a match, advance both. On a mismatch with `k > 0`, **fall back** to `k = lps[k - 1]` and compare again at the *same* text position. On a mismatch with `k == 0`, move `i` forward. When `k` reaches `m`, record a match and fall back by `lps[m - 1]` so that overlapping matches are still found. (This version assumes the pattern is non-empty.)
+
+```java
+List<Integer> kmpSearch(String t, String p) {
+    int n = t.length();
+    int m = p.length();
+    int[] lps = buildLps(p);
+    List<Integer> matches = new ArrayList<>();
+
+    int i = 0;                             // position in the text -- never moves backward
+    int k = 0;                             // how many pattern characters are matched so far
+    while (i < n) {
+        if (t.charAt(i) == p.charAt(k)) {
+            i++;
+            k++;
+            if (k == m) {
+                matches.add(i - m);        // full match ending just before i
+                k = lps[k - 1];            // keep the longest border so overlapping matches are found too
+            }
+        } else if (k > 0) {
+            k = lps[k - 1];                // reuse what already matched; do not advance i
+        } else {
+            i++;                           // nothing matched at all; move on
+        }
+    }
+    return matches;
+}
+```
+
+## Why it is O(n + m)
+
+Every iteration of the loop does exactly one character comparison and then does one of two things: it **advances `i`** (a match, or a mismatch with `k == 0`), or it **decreases `k`** (a fallback). Count them separately:
+
+- `i` only moves forward and stops at `n`, so there are at most `n` advancing iterations.
+- `k` increases by at most 1 per advancing iteration, so it rises at most `n` times in total. Since it can never go below `0`, it can fall back at most as many times as it has risen, so at most `n` fallbacks.
+
+That bounds the loop at `2n` iterations, so searching is **O(n)**. The LPS construction uses the same argument on the pattern and costs **O(m)**. Together: **O(n + m)** time and O(m) extra space, regardless of how nasty the input is. Compared with the naive O(n × m), this removes the worst case entirely.
+
+## When to reach for it
+
+For a single, one-off search in ordinary code, `String.indexOf` is the right call and is perfectly fast on typical text. KMP earns its keep when you need a **guaranteed linear bound**, when you are matching against a stream you can't re-read, or when you search for the same pattern in many texts and can build the LPS array once. It is also the clearest example of a broader technique: precompute from the pattern what a failed comparison tells you, so that no work is ever repeated.
