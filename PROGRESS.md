@@ -92,3 +92,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 86 | 2026-10-14 | Graph Coloring & Bipartite Graph Checking | [notes](./notes/day86-graph-coloring-bipartite.md) | [code](./src/day86/ColoringDemo.java) |
 | 87 | 2026-10-15 | Advanced Trees: Segment Trees | [notes](./notes/day87-segment-trees.md) | [code](./src/day87/SegmentTreeDemo.java) |
 | 88 | 2026-10-16 | Advanced Trees: Fenwick Trees (Binary Indexed Trees) | [notes](./notes/day88-fenwick-trees.md) | [code](./src/day88/FenwickTreeDemo.java) |
+| 89 | 2026-10-17 | String Matching: the KMP Algorithm | [notes](./notes/day89-kmp.md) | [code](./src/day89/KmpDemo.java) |
