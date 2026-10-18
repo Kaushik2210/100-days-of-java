@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class StringSearchDemo {
 
@@ -42,6 +44,137 @@ public class StringSearchDemo {
                 + ", real matches found = " + found.size() + ", identical to naive: " + found.equals(expected));
         }
         System.out.println("(a tiny modulus causes many collisions, but verification means the answer is still always correct)");
+
+        System.out.println();
+        int n = 20000;
+        int m = 500;
+        verifyComparisons = 0;
+        rabinKarp(randomString(random, n, 4), randomString(random, m, 4), 256, 1_000_000_007L);
+        long randomCost = verifyComparisons;
+        verifyComparisons = 0;
+        int allAMatches = rabinKarp("a".repeat(n), "a".repeat(m), 256, 1_000_000_007L).size();
+        long allACost = verifyComparisons;
+        System.out.println("verification cost for n = " + n + ", m = " + m + ":");
+        System.out.println("  random text, random pattern: " + randomCost + " characters compared (hash filtered nearly everything)");
+        System.out.println("  all 'a' text, all 'a' pattern: " + allACost + " characters compared for " + allAMatches
+            + " real matches (= " + allAMatches + " x " + m + ", the O(n x m) worst case)");
+
+        System.out.println();
+        int multiTrials = 800;
+        int trieMismatches = 0;
+        int multiHashMismatches = 0;
+        long totalHits = 0;
+        for (int t = 0; t < multiTrials; t++) {
+            String s = randomString(random, random.nextInt(51), 3);
+
+            Set<String> mixedLengths = new HashSet<>();
+            int count = 1 + random.nextInt(5);
+            for (int i = 0; i < count; i++) mixedLengths.add(randomString(random, 1 + random.nextInt(5), 3));
+            Set<String> expectedMixed = naiveMulti(s, mixedLengths);
+            totalHits += expectedMixed.size();
+            if (!expectedMixed.equals(trieSearchAll(s, buildTrie(mixedLengths)))) trieMismatches++;
+
+            int fixedLength = 1 + random.nextInt(4);
+            Set<String> sameLength = new HashSet<>();
+            for (int i = 0; i < count; i++) sameLength.add(randomString(random, fixedLength, 3));
+            if (!naiveMulti(s, sameLength).equals(rabinKarpMulti(s, sameLength, 256, 1_000_000_007L))) multiHashMismatches++;
+        }
+        System.out.println("multi-pattern search vs naive over " + multiTrials + " random cases (" + totalHits
+            + " (position, pattern) hits in the mixed-length cases):");
+        System.out.println("  trie search mismatches (patterns of different lengths) = " + trieMismatches);
+        System.out.println("  multi-pattern Rabin-Karp mismatches (same length) = " + multiHashMismatches);
+
+        System.out.println();
+        int patternCount = 5000;
+        int textLength = 50000;
+        Set<String> manyPatterns = new HashSet<>();
+        while (manyPatterns.size() < patternCount) manyPatterns.add(randomString(random, 8, 8));
+        String longText = randomString(random, textLength, 8);
+        List<String> patternList = new ArrayList<>(manyPatterns);
+        for (int i = 0; i < 40; i++) {
+            int at = random.nextInt(textLength - 8);
+            String planted = patternList.get(random.nextInt(patternList.size()));
+            longText = longText.substring(0, at) + planted + longText.substring(at + 8); // make sure real hits exist
+        }
+
+        trieSteps = 0;
+        TrieNode root = buildTrie(manyPatterns);
+        Set<String> trieHits = trieSearchAll(longText, root);
+        Set<String> hashHits2 = rabinKarpMulti(longText, manyPatterns, 256, 1_000_000_007L);
+        System.out.println(patternCount + " patterns of length 8 in a text of " + textLength + " characters:");
+        System.out.println("  trie search found " + trieHits.size() + " hits using " + trieSteps + " trie steps (at most n x L = "
+            + (long) textLength * 8 + ")");
+        System.out.println("  multi-pattern Rabin-Karp found " + hashHits2.size() + " hits; identical to the trie's: "
+            + trieHits.equals(hashHits2));
+        System.out.println("  running a separate single-pattern search per pattern would examine at least "
+            + (long) patternCount * (textLength - 7) + " starting positions");
+    }
+
+    static long trieSteps;
+
+    static class TrieNode {
+        java.util.Map<Character, TrieNode> children = new java.util.HashMap<>();
+        boolean isEndOfWord;
+    }
+
+    static TrieNode buildTrie(Set<String> patterns) {
+        TrieNode root = new TrieNode();
+        for (String pattern : patterns) {
+            TrieNode current = root;
+            for (char c : pattern.toCharArray()) {
+                current = current.children.computeIfAbsent(c, k -> new TrieNode());
+            }
+            current.isEndOfWord = true;
+        }
+        return root;
+    }
+
+    static Set<String> trieSearchAll(String text, TrieNode root) {
+        Set<String> hits = new HashSet<>();
+        for (int start = 0; start < text.length(); start++) {
+            TrieNode node = root;
+            for (int i = start; i < text.length(); i++) {
+                trieSteps++;
+                node = node.children.get(text.charAt(i));
+                if (node == null) break;
+                if (node.isEndOfWord) hits.add(start + ":" + text.substring(start, i + 1));
+            }
+        }
+        return hits;
+    }
+
+    // every pattern must have the same length m; one rolling hash serves all of them
+    static Set<String> rabinKarpMulti(String t, Set<String> patterns, long base, long mod) {
+        Set<String> hits = new HashSet<>();
+        if (patterns.isEmpty()) return hits;
+        int m = patterns.iterator().next().length();
+        int n = t.length();
+        if (m > n) return hits;
+
+        java.util.Map<Long, List<String>> byHash = new java.util.HashMap<>();
+        for (String pattern : patterns) {
+            byHash.computeIfAbsent(freshHash(pattern, 0, m, base, mod), k -> new ArrayList<>()).add(pattern);
+        }
+
+        long[] windowHashes = rollingHashes(t, m, base, mod);
+        for (int s = 0; s < windowHashes.length; s++) {
+            List<String> candidates = byHash.get(windowHashes[s]);
+            if (candidates == null) continue;
+            for (String candidate : candidates) {
+                if (t.startsWith(candidate, s)) hits.add(s + ":" + candidate); // verify, since hashes can collide
+            }
+        }
+        return hits;
+    }
+
+    static Set<String> naiveMulti(String t, Set<String> patterns) {
+        Set<String> hits = new HashSet<>();
+        for (String pattern : patterns) {
+            for (int start = 0; start + pattern.length() <= t.length(); start++) {
+                if (t.startsWith(pattern, start)) hits.add(start + ":" + pattern);
+            }
+        }
+        return hits;
     }
 
     static String randomString(Random random, int length, int alphabet) {
