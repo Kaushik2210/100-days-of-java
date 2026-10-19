@@ -202,4 +202,4 @@ long fibByMatrix(int n) {
 }
 ```
 
-The guard on the last squaring matters for a subtle reason: squaring the base once more after the last needed bit produces a value larger than anything the answer needs, which can overflow `long` even when `F(n)` itself fits.
+The guard skips a pointless final squaring: after the last needed bit, squaring the base once more produces a power of the matrix that the answer never uses. With plain `long` arithmetic, any overflow in that unused value wraps around silently and the answer is still correct, so the guard saves one multiplication rather than fixing a bug. It starts to matter as soon as overflow is not silent. With `Math.multiplyExact` (which throws `ArithmeticException` instead of wrapping) the unguarded version fails on inputs where `F(n)` itself fits comfortably, and with `BigInteger` it wastes work on an enormous throwaway number.
