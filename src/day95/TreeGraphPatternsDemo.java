@@ -99,6 +99,33 @@ public class TreeGraphPatternsDemo {
         return Math.max(through, Math.max(diameterBrute(n.left), diameterBrute(n.right)));
     }
 
+    // Pattern 3: lowest common ancestor. If p and q are found in different subtrees, this node is the answer;
+    // if only one side reports a hit, pass it up unchanged.
+    static TreeNode lca(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+        TreeNode left = lca(root.left, p, q);
+        TreeNode right = lca(root.right, p, q);
+        if (left != null && right != null) return root;
+        return left != null ? left : right;
+    }
+
+    static boolean pathTo(TreeNode n, TreeNode target, List<TreeNode> path) {
+        if (n == null) return false;
+        path.add(n);
+        if (n == target || pathTo(n.left, target, path) || pathTo(n.right, target, path)) return true;
+        path.remove(path.size() - 1);
+        return false;
+    }
+
+    static TreeNode lcaBrute(TreeNode root, TreeNode p, TreeNode q) {
+        List<TreeNode> a = new ArrayList<>(), b = new ArrayList<>();
+        pathTo(root, p, a);
+        pathTo(root, q, b);
+        TreeNode last = null;
+        for (int i = 0; i < Math.min(a.size(), b.size()) && a.get(i) == b.get(i); i++) last = a.get(i);
+        return last;
+    }
+
     public static void main(String[] args) {
         TreeNode sample = build(new Integer[] {3, 9, 20, null, null, 15, 7}, 0);
         System.out.println("levels of [3, 9, 20, null, null, 15, 7] = " + levels(sample) + " (expected [[3], [9, 20], [15, 7]])");
@@ -127,6 +154,25 @@ public class TreeGraphPatternsDemo {
             if (diameter(root) != diameterBrute(root)) bad++;
         }
         System.out.println("one-pass diameter vs the O(n^2) height-per-node version over " + trials + " random trees: "
+            + (bad == 0 ? "all match" : bad + " MISMATCHES"));
+
+        TreeNode s9 = sample.left, s20 = sample.right, s15 = sample.right.left, s7 = sample.right.right;
+        System.out.println("lca(15, 7) = " + lca(sample, s15, s7).val + " (expected 20)");
+        System.out.println("lca(9, 7) = " + lca(sample, s9, s7).val + " (expected 3)");
+        System.out.println("lca(20, 7) = " + lca(sample, s20, s7).val + " (expected 20: a node can be its own ancestor)");
+        bad = 0;
+        int pairs = 0;
+        for (int t = 0; t < trials; t++) {
+            TreeNode root = randomTree(random, 1 + random.nextInt(14));
+            List<TreeNode> nodes = new ArrayList<>();
+            preorder(root, nodes);
+            for (int k = 0; k < 5; k++) {
+                TreeNode p = nodes.get(random.nextInt(nodes.size())), q = nodes.get(random.nextInt(nodes.size()));
+                pairs++;
+                if (lca(root, p, q) != lcaBrute(root, p, q)) bad++;
+            }
+        }
+        System.out.println("recursive LCA vs comparing root-to-node paths over " + pairs + " random node pairs: "
             + (bad == 0 ? "all match" : bad + " MISMATCHES"));
     }
 }
