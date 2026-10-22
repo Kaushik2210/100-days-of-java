@@ -77,6 +77,28 @@ public class TreeGraphPatternsDemo {
         return n == null ? 0 : 1 + Math.max(height(n.left), height(n.right));
     }
 
+    // Pattern 2: DFS that returns one thing and records another. depth() returns the height to its parent,
+    // while the best path through each node (left depth + right depth) is recorded on the side.
+    static int diameter(TreeNode root) {
+        int[] best = {0};
+        depth(root, best);
+        return best[0];
+    }
+
+    static int depth(TreeNode n, int[] best) {
+        if (n == null) return 0;
+        int l = depth(n.left, best);
+        int r = depth(n.right, best);
+        best[0] = Math.max(best[0], l + r);
+        return 1 + Math.max(l, r);
+    }
+
+    static int diameterBrute(TreeNode n) {
+        if (n == null) return 0;
+        int through = height(n.left) + height(n.right);
+        return Math.max(through, Math.max(diameterBrute(n.left), diameterBrute(n.right)));
+    }
+
     public static void main(String[] args) {
         TreeNode sample = build(new Integer[] {3, 9, 20, null, null, 15, 7}, 0);
         System.out.println("levels of [3, 9, 20, null, null, 15, 7] = " + levels(sample) + " (expected [[3], [9, 20], [15, 7]])");
@@ -93,6 +115,18 @@ public class TreeGraphPatternsDemo {
             if (total != count(root) || rows.size() != height(root)) bad++;
         }
         System.out.println("level-order rows cover every node and equal the height over " + trials + " random trees: "
+            + (bad == 0 ? "all match" : bad + " MISMATCHES"));
+
+        System.out.println("diameter (edges) of the sample tree = " + diameter(sample) + " (expected 3: 9 -> 3 -> 20 -> 15)");
+        TreeNode skewed = build(new Integer[] {1, null, 2, null, null, null, 3}, 0);
+        System.out.println("diameter of a right-leaning chain of 3 nodes = " + diameter(skewed) + " (expected 2)");
+        System.out.println("diameter of a single node = " + diameter(new TreeNode(7)) + " (expected 0)");
+        bad = 0;
+        for (int t = 0; t < trials; t++) {
+            TreeNode root = randomTree(random, 1 + random.nextInt(14));
+            if (diameter(root) != diameterBrute(root)) bad++;
+        }
+        System.out.println("one-pass diameter vs the O(n^2) height-per-node version over " + trials + " random trees: "
             + (bad == 0 ? "all match" : bad + " MISMATCHES"));
     }
 }
