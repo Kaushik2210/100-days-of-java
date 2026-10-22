@@ -194,6 +194,56 @@ public class TreeGraphPatternsDemo {
         return best;
     }
 
+    // Pattern 6: flood fill to count connected components. An explicit stack avoids deep recursion on big grids.
+    static int islands(int[][] grid) {
+        int rows = grid.length, cols = grid[0].length, count = 0;
+        boolean[][] seen = new boolean[rows][cols];
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] != 1 || seen[r][c]) continue;
+                count++;
+                Deque<int[]> stack = new ArrayDeque<>();
+                stack.push(new int[] {r, c});
+                seen[r][c] = true;
+                while (!stack.isEmpty()) {
+                    int[] cell = stack.pop();
+                    for (int[] step : STEPS) {
+                        int nr = cell[0] + step[0], nc = cell[1] + step[1];
+                        if (nr < 0 || nc < 0 || nr >= rows || nc >= cols || grid[nr][nc] != 1 || seen[nr][nc]) continue;
+                        seen[nr][nc] = true;
+                        stack.push(new int[] {nr, nc});
+                    }
+                }
+            }
+        return count;
+    }
+
+    // Oracle: union-find (day 80). Merge every pair of adjacent land cells, then count the roots.
+    static int find(int[] parent, int x) {
+        while (parent[x] != x) {
+            parent[x] = parent[parent[x]];
+            x = parent[x];
+        }
+        return x;
+    }
+
+    static int islandsUnionFind(int[][] grid) {
+        int rows = grid.length, cols = grid[0].length;
+        int[] parent = new int[rows * cols];
+        for (int i = 0; i < parent.length; i++) parent[i] = i;
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] != 1) continue;
+                if (r + 1 < rows && grid[r + 1][c] == 1) parent[find(parent, r * cols + c)] = find(parent, (r + 1) * cols + c);
+                if (c + 1 < cols && grid[r][c + 1] == 1) parent[find(parent, r * cols + c)] = find(parent, r * cols + c + 1);
+            }
+        int roots = 0;
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+                if (grid[r][c] == 1 && find(parent, r * cols + c) == r * cols + c) roots++;
+        return roots;
+    }
+
     public static void main(String[] args) {
         TreeNode sample = build(new Integer[] {3, 9, 20, null, null, 15, 7}, 0);
         System.out.println("levels of [3, 9, 20, null, null, 15, 7] = " + levels(sample) + " (expected [[3], [9, 20], [15, 7]])");
@@ -281,5 +331,26 @@ public class TreeGraphPatternsDemo {
         }
         System.out.println("one multi-source BFS vs one BFS per source over " + trials + " random grids: "
             + (bad == 0 ? "all match" : bad + " MISMATCHES"));
+
+        int[][] map = {
+            {1, 1, 0, 0, 0},
+            {1, 1, 0, 0, 0},
+            {0, 0, 1, 0, 0},
+            {0, 0, 0, 1, 1}
+        };
+        System.out.println("islands in the sample map = " + islands(map) + " (expected 3; diagonal cells do not connect)");
+        bad = 0;
+        for (int t = 0; t < trials; t++) {
+            int rows = 1 + random.nextInt(8), cols = 1 + random.nextInt(8);
+            int[][] g = new int[rows][cols];
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++) g[r][c] = random.nextInt(100) < 45 ? 1 : 0;
+            if (islands(g) != islandsUnionFind(g)) bad++;
+        }
+        System.out.println("flood-fill islands vs union-find over " + trials + " random grids: "
+            + (bad == 0 ? "all match" : bad + " MISMATCHES"));
+        int[][] huge = new int[1500][1500];
+        for (int[] row : huge) Arrays.fill(row, 1);
+        System.out.println("1500x1500 all-land grid is one island: " + islands(huge) + " (explicit stack, no StackOverflowError)");
     }
 }
