@@ -155,6 +155,45 @@ public class TreeGraphPatternsDemo {
         return (sum == k ? 1 : 0) + startingAt(n.left, sum, k) + startingAt(n.right, sum, k);
     }
 
+    // Pattern 5: multi-source BFS. Seed the queue with every source at distance 0 and one sweep gives each
+    // cell its distance to the nearest source. Walls are -1 in the grid; unreachable cells stay -1.
+    static final int[][] STEPS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    static int[][] nearestSource(int[][] walls, List<int[]> sources) {
+        int rows = walls.length, cols = walls[0].length;
+        int[][] dist = new int[rows][cols];
+        for (int[] row : dist) Arrays.fill(row, -1);
+        Deque<int[]> queue = new ArrayDeque<>();
+        for (int[] s : sources) {
+            dist[s[0]][s[1]] = 0;
+            queue.add(s);
+        }
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            for (int[] step : STEPS) {
+                int r = cell[0] + step[0], c = cell[1] + step[1];
+                if (r < 0 || c < 0 || r >= rows || c >= cols || walls[r][c] == 1 || dist[r][c] != -1) continue;
+                dist[r][c] = dist[cell[0]][cell[1]] + 1;
+                queue.add(new int[] {r, c});
+            }
+        }
+        return dist;
+    }
+
+    // Oracle: run an independent BFS from each source and keep the smaller distance per cell.
+    static int[][] nearestSourceBrute(int[][] walls, List<int[]> sources) {
+        int[][] best = null;
+        for (int[] s : sources) {
+            int[][] one = nearestSource(walls, List.of(s));
+            if (best == null) best = one;
+            else
+                for (int r = 0; r < one.length; r++)
+                    for (int c = 0; c < one[0].length; c++)
+                        if (one[r][c] != -1 && (best[r][c] == -1 || one[r][c] < best[r][c])) best[r][c] = one[r][c];
+        }
+        return best;
+    }
+
     public static void main(String[] args) {
         TreeNode sample = build(new Integer[] {3, 9, 20, null, null, 15, 7}, 0);
         System.out.println("levels of [3, 9, 20, null, null, 15, 7] = " + levels(sample) + " (expected [[3], [9, 20], [15, 7]])");
@@ -218,5 +257,29 @@ public class TreeGraphPatternsDemo {
         }
         System.out.println("prefix-map path sums vs starting a fresh sum at every node over " + trials + " random trees ("
             + nonZero + " with at least one path): " + (bad == 0 ? "all match" : bad + " MISMATCHES"));
+
+        int[][] room = {
+            {0, 0, 1, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 0}
+        };
+        System.out.println("distance to the nearest of (0,0) and (0,3), walls in column 2:");
+        for (int[] row : nearestSource(room, List.of(new int[] {0, 0}, new int[] {0, 3}))) System.out.println("  " + Arrays.toString(row));
+        System.out.println("(expected: the wall column blocks the top two rows, and the bottom row reads [2, 3, 3, 2])");
+        bad = 0;
+        for (int t = 0; t < trials; t++) {
+            int rows = 1 + random.nextInt(6), cols = 1 + random.nextInt(6);
+            int[][] g = new int[rows][cols];
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++) g[r][c] = random.nextInt(100) < 25 ? 1 : 0;
+            List<int[]> sources = new ArrayList<>();
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                    if (g[r][c] == 0 && random.nextInt(100) < 20) sources.add(new int[] {r, c});
+            if (sources.isEmpty()) continue;
+            if (!Arrays.deepEquals(nearestSource(g, sources), nearestSourceBrute(g, sources))) bad++;
+        }
+        System.out.println("one multi-source BFS vs one BFS per source over " + trials + " random grids: "
+            + (bad == 0 ? "all match" : bad + " MISMATCHES"));
     }
 }
