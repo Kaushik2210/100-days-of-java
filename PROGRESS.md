@@ -98,3 +98,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 92 | 2026-10-20 | Advanced Recursion: Memoized Recursion vs Iterative DP | [notes](./notes/day92-memoization-vs-tabulation.md) | [code](./src/day92/MemoVsTabulationDemo.java) |
 | 93 | 2026-10-21 | Amortized Analysis & Complexity Deep Dive | [notes](./notes/day93-amortized-analysis.md) | [code](./src/day93/AmortizedAnalysisDemo.java) |
 | 94 | 2026-10-22 | Problem-Solving Patterns: Arrays & Strings | [notes](./notes/day94-array-and-string-patterns.md) | [code](./src/day94/ArrayStringPatternsDemo.java) |
+| 95 | 2026-10-23 | Problem-Solving Patterns: Trees & Graphs | [notes](./notes/day95-tree-and-graph-patterns.md) | [code](./src/day95/TreeGraphPatternsDemo.java) |
