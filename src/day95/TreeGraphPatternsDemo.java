@@ -126,6 +126,35 @@ public class TreeGraphPatternsDemo {
         return last;
     }
 
+    // Pattern 4: prefix sums on a tree (day 94's pattern, one root-to-node path at a time). Count downward paths
+    // summing to k. The map holds prefix sums of the current path only, so undo the entry when leaving a node.
+    static int pathSums(TreeNode root, int k) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        seen.put(0, 1);
+        return pathSums(root, 0, k, seen);
+    }
+
+    static int pathSums(TreeNode n, int prefix, int k, Map<Integer, Integer> seen) {
+        if (n == null) return 0;
+        prefix += n.val;
+        int found = seen.getOrDefault(prefix - k, 0);
+        seen.merge(prefix, 1, Integer::sum);
+        found += pathSums(n.left, prefix, k, seen) + pathSums(n.right, prefix, k, seen);
+        seen.merge(prefix, -1, Integer::sum); // backtrack: siblings must not see this path's prefix
+        return found;
+    }
+
+    static int pathSumsBrute(TreeNode root, int k) {
+        if (root == null) return 0;
+        return startingAt(root, 0, k) + pathSumsBrute(root.left, k) + pathSumsBrute(root.right, k);
+    }
+
+    static int startingAt(TreeNode n, int sum, int k) {
+        if (n == null) return 0;
+        sum += n.val;
+        return (sum == k ? 1 : 0) + startingAt(n.left, sum, k) + startingAt(n.right, sum, k);
+    }
+
     public static void main(String[] args) {
         TreeNode sample = build(new Integer[] {3, 9, 20, null, null, 15, 7}, 0);
         System.out.println("levels of [3, 9, 20, null, null, 15, 7] = " + levels(sample) + " (expected [[3], [9, 20], [15, 7]])");
@@ -174,5 +203,20 @@ public class TreeGraphPatternsDemo {
         }
         System.out.println("recursive LCA vs comparing root-to-node paths over " + pairs + " random node pairs: "
             + (bad == 0 ? "all match" : bad + " MISMATCHES"));
+
+        TreeNode sums = build(new Integer[] {10, 5, -3, 3, 2, null, 11, 3, -2, null, 1}, 0);
+        System.out.println("downward paths summing to 8 in [10, 5, -3, 3, 2, null, 11, 3, -2, null, 1] = "
+            + pathSums(sums, 8) + " (expected 3: 5 -> 3, 5 -> 2 -> 1, -3 -> 11)");
+        bad = 0;
+        int nonZero = 0;
+        for (int t = 0; t < trials; t++) {
+            TreeNode root = randomTree(random, 1 + random.nextInt(14));
+            int k = random.nextInt(9) - 4;
+            int expected = pathSumsBrute(root, k);
+            if (pathSums(root, k) != expected) bad++;
+            if (expected > 0) nonZero++;
+        }
+        System.out.println("prefix-map path sums vs starting a fresh sum at every node over " + trials + " random trees ("
+            + nonZero + " with at least one path): " + (bad == 0 ? "all match" : bad + " MISMATCHES"));
     }
 }
