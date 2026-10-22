@@ -244,6 +244,56 @@ public class TreeGraphPatternsDemo {
         return roots;
     }
 
+    // Pattern 7: ordering with dependencies. Kahn's algorithm repeatedly removes nodes with no unmet prerequisite;
+    // if some nodes are never removed, they sit on a cycle and no valid order exists (returns null).
+    static int[] topoOrder(int n, int[][] edges) {
+        List<List<Integer>> next = new ArrayList<>();
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) next.add(new ArrayList<>());
+        for (int[] e : edges) {
+            next.get(e[0]).add(e[1]);
+            indegree[e[1]]++;
+        }
+        Deque<Integer> ready = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) if (indegree[i] == 0) ready.add(i);
+        int[] order = new int[n];
+        int placed = 0;
+        while (!ready.isEmpty()) {
+            int u = ready.poll();
+            order[placed++] = u;
+            for (int v : next.get(u)) if (--indegree[v] == 0) ready.add(v);
+        }
+        return placed == n ? order : null;
+    }
+
+    // Oracle for "is there a cycle": DFS with three colors. Meeting a node that is still on the current path
+    // (gray) means a back edge.
+    static boolean hasCycle(int n, int[][] edges) {
+        List<List<Integer>> next = new ArrayList<>();
+        for (int i = 0; i < n; i++) next.add(new ArrayList<>());
+        for (int[] e : edges) next.get(e[0]).add(e[1]);
+        int[] color = new int[n]; // 0 = unvisited, 1 = on the current path, 2 = finished
+        for (int i = 0; i < n; i++) if (color[i] == 0 && cycleFrom(i, next, color)) return true;
+        return false;
+    }
+
+    static boolean cycleFrom(int u, List<List<Integer>> next, int[] color) {
+        color[u] = 1;
+        for (int v : next.get(u)) {
+            if (color[v] == 1) return true;
+            if (color[v] == 0 && cycleFrom(v, next, color)) return true;
+        }
+        color[u] = 2;
+        return false;
+    }
+
+    static boolean respectsEdges(int[] order, int[][] edges) {
+        int[] position = new int[order.length];
+        for (int i = 0; i < order.length; i++) position[order[i]] = i;
+        for (int[] e : edges) if (position[e[0]] >= position[e[1]]) return false;
+        return true;
+    }
+
     public static void main(String[] args) {
         TreeNode sample = build(new Integer[] {3, 9, 20, null, null, 15, 7}, 0);
         System.out.println("levels of [3, 9, 20, null, null, 15, 7] = " + levels(sample) + " (expected [[3], [9, 20], [15, 7]])");
@@ -352,5 +402,28 @@ public class TreeGraphPatternsDemo {
         int[][] huge = new int[1500][1500];
         for (int[] row : huge) Arrays.fill(row, 1);
         System.out.println("1500x1500 all-land grid is one island: " + islands(huge) + " (explicit stack, no StackOverflowError)");
+
+        int[][] courses = {{0, 1}, {0, 2}, {1, 3}, {2, 3}};
+        System.out.println("order for edges 0->1, 0->2, 1->3, 2->3 = " + Arrays.toString(topoOrder(4, courses)) + " (expected [0, 1, 2, 3])");
+        System.out.println("order with an added edge 3->0 = " + Arrays.toString(topoOrder(4, new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 0}}))
+            + " (expected null: 0 -> 1 -> 3 -> 0 is a cycle)");
+        bad = 0;
+        int cyclic = 0;
+        for (int t = 0; t < trials; t++) {
+            int n = 1 + random.nextInt(7);
+            List<int[]> list = new ArrayList<>();
+            int m = random.nextInt(2 * n);
+            for (int i = 0; i < m; i++) {
+                int u = random.nextInt(n), v = random.nextInt(n);
+                list.add(new int[] {u, v});
+            }
+            int[][] edges = list.toArray(new int[0][]);
+            int[] order = topoOrder(n, edges);
+            boolean cycle = hasCycle(n, edges);
+            if (cycle) cyclic++;
+            if ((order == null) != cycle || (order != null && !respectsEdges(order, edges))) bad++;
+        }
+        System.out.println("Kahn's order vs three-color DFS cycle check over " + trials + " random digraphs (" + cyclic
+            + " cyclic, orders also checked edge by edge): " + (bad == 0 ? "all match" : bad + " MISMATCHES"));
     }
 }
