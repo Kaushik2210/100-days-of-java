@@ -41,3 +41,85 @@ int rob(int[] money) {
 This is O(n) time and O(1) space. The same skeleton, "best of skipping or taking-after-a-gap", underlies a whole family: climbing stairs (Day 92), decoding strings into letters, and maximum non-adjacent sums.
 
 **Recognizing it:** the input is a sequence, you make a decision per element, and the decision only interacts with a *bounded* number of previous elements.
+
+## Pattern 2: best subsequence ending here (Longest Increasing Subsequence)
+
+Find the length of the longest **strictly increasing subsequence** of an array (elements stay in order but may be skipped). Unlike House Robber, an element can extend *any* earlier smaller element, not just a nearby one.
+
+- **State:** `len[i]` = the length of the longest increasing subsequence that **ends exactly at index `i`**.
+- **Recurrence:** `len[i] = 1 + max(len[j])` over all earlier `j` with `a[j] < a[i]` (or just `1` if none exist).
+- **Base case:** every element alone is a subsequence of length 1.
+- **Answer:** the **maximum over all `i`**, not the last entry, since the best subsequence can end anywhere.
+
+That last point is the classic trap: here the answer is not in the final cell.
+
+```java
+int lisQuadratic(int[] a) {
+    int n = a.length;
+    int[] len = new int[n];
+    int best = 0;
+    for (int i = 0; i < n; i++) {
+        len[i] = 1;
+        for (int j = 0; j < i; j++) {
+            if (a[j] < a[i]) len[i] = Math.max(len[i], len[j] + 1);
+        }
+        best = Math.max(best, len[i]);
+    }
+    return best;
+}
+```
+
+This is **O(n²)**. A well-known refinement gets **O(n log n)** by changing what the state means. Keep an array `tails` where `tails[k]` is the **smallest possible last value** of an increasing subsequence of length `k + 1`. `tails` is always sorted, so for each new value `x` a binary search (Day 53) finds the first tail that is `>= x`. Replace it with `x` (a smaller tail is never worse), or, if every tail is smaller than `x`, append `x` (the longest subsequence just grew).
+
+```java
+int lisFast(int[] a) {
+    int[] tails = new int[a.length];
+    int size = 0;
+    for (int x : a) {
+        int lo = 0, hi = size;
+        while (lo < hi) {                       // lower bound: first position whose tail is >= x
+            int mid = (lo + hi) / 2;
+            if (tails[mid] < x) lo = mid + 1;
+            else hi = mid;
+        }
+        tails[lo] = x;
+        if (lo == size) size++;
+    }
+    return size;                                 // the number of tails is the LIS length
+}
+```
+
+Using "first tail `>= x`" (not `> x`) is what makes it *strictly* increasing: an equal value replaces the equal tail instead of extending the subsequence. Note that `tails` itself is **not** necessarily an actual longest subsequence; only its length is meaningful.
+
+**Recognizing it:** "longest/best chain where each element must relate to an earlier chosen one" (increasing, divisible, nestable).
+
+## Pattern 3: reachable totals (Subset Sum and Partition)
+
+Can the numbers in an array be split into two groups with equal sums? That asks whether some subset adds up to exactly **half** of the total (and the total must be even). This is Day 77's knapsack in its simplest, yes/no form.
+
+- **State:** `reachable[s]` = can some subset of the items processed so far sum to exactly `s`?
+- **Recurrence:** processing an item `v`, a sum `s` becomes reachable if `s - v` already was: `reachable[s] |= reachable[s - v]`.
+- **Base case:** `reachable[0] = true` (the empty subset).
+- **Answer:** `reachable[total / 2]`.
+
+```java
+boolean canPartition(int[] nums) {
+    int total = 0;
+    for (int v : nums) total += v;
+    if (total % 2 != 0) return false;           // an odd total can never split evenly
+    int target = total / 2;
+
+    boolean[] reachable = new boolean[target + 1];
+    reachable[0] = true;
+    for (int v : nums) {
+        for (int s = target; s >= v; s--) {      // downward, so each item is used at most once (as in Day 77's 0/1 knapsack)
+            if (reachable[s - v]) reachable[s] = true;
+        }
+    }
+    return reachable[target];
+}
+```
+
+This is **O(n × target)** time and **O(target)** space, pseudo-polynomial like Day 77. The same loop answers "is this exact total possible?", "how many subsets reach this total?" (change `boolean` to counts), and "closest total at or below a limit."
+
+**Recognizing it:** "exactly this sum / this capacity", "split into groups", "can we make this amount from these items".
