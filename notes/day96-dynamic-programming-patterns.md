@@ -123,3 +123,98 @@ boolean canPartition(int[] nums) {
 This is **O(n × target)** time and **O(target)** space, pseudo-polynomial like Day 77. The same loop answers "is this exact total possible?", "how many subsets reach this total?" (change `boolean` to counts), and "closest total at or below a limit."
 
 **Recognizing it:** "exactly this sum / this capacity", "split into groups", "can we make this amount from these items".
+
+## Pattern 4: state machines (Stock Trading with Cooldown)
+
+Some problems are best seen as a small **state machine**: on each step you are in one of a few named situations, and a step moves you between them. DP then tracks the best result *for each situation* separately.
+
+Given daily stock prices, you may buy and sell as often as you like, hold at most one share, and after selling you must wait **one day** before buying again. Maximize the profit.
+
+The three situations at the end of a day:
+
+- **`hold`**: you own a share.
+- **`sold`**: you sold a share today (so tomorrow is a forced cooldown).
+- **`rest`**: you own nothing and are free to buy.
+
+Each holds the best profit achievable in that situation, and each day's values come from the previous day's:
+
+- `hold = max(hold, rest - price)`: keep holding, or buy (allowed only from `rest`).
+- `sold = hold + price`: sell the share you held.
+- `rest = max(rest, sold)`: stay idle, or come out of yesterday's cooldown.
+
+The answer is the best final situation in which you hold nothing: `max(sold, rest)`.
+
+```java
+int maxProfitWithCooldown(int[] prices) {
+    if (prices.length == 0) return 0;
+    final int NEVER = Integer.MIN_VALUE / 2;     // "impossible": half of MIN_VALUE so adding a price can't overflow
+    int hold = -prices[0];                       // the only way to hold on day 0 is to have bought today
+    int sold = NEVER;                            // nothing can have been sold on day 0
+    int rest = 0;
+    for (int i = 1; i < prices.length; i++) {
+        int newHold = Math.max(hold, rest - prices[i]);
+        int newSold = hold + prices[i];
+        int newRest = Math.max(rest, sold);
+        hold = newHold;
+        sold = newSold;
+        rest = newRest;
+    }
+    return Math.max(sold, rest);
+}
+```
+
+Three variables replace a three-column table, and the cooldown rule is expressed purely by *which transitions exist*: there is simply no edge from `sold` straight to `hold`. Variations (a transaction fee, at most `k` trades) just add states or edges.
+
+**Recognizing it:** the problem describes rules like "after X you must wait / can't do Y", or "at most k of something". Ask "what situations can I be in?" and track one best value per situation.
+
+## Pattern 5: intervals (Longest Palindromic Subsequence)
+
+When the natural subproblem is a **contiguous range** `[i, j]` that shrinks from both ends, the state is a pair of indices. The **Longest Palindromic Subsequence** (the longest subsequence that reads the same forward and backward) is the standard example.
+
+- **State:** `dp[i][j]` = the length of the longest palindromic subsequence of `s[i..j]`.
+- **Recurrence:** if `s[i] == s[j]`, both ends can wrap around the best palindrome inside: `2 + dp[i+1][j-1]`. Otherwise one end must be dropped: `max(dp[i+1][j], dp[i][j-1])`.
+- **Base cases:** `dp[i][i] = 1` (one character), and an empty range contributes `0`.
+- **Order:** each cell needs the row below (`i+1`) and the cell to its left (`j-1`), so fill `i` from the end down to `0`, and `j` from `i+1` up.
+- **Answer:** `dp[0][n-1]`, the whole string.
+
+```java
+int longestPalindromicSubsequence(String s) {
+    int n = s.length();
+    if (n == 0) return 0;
+    int[][] dp = new int[n][n];
+    for (int i = n - 1; i >= 0; i--) {
+        dp[i][i] = 1;
+        for (int j = i + 1; j < n; j++) {
+            if (s.charAt(i) == s.charAt(j)) {
+                dp[i][j] = 2 + (i + 1 <= j - 1 ? dp[i + 1][j - 1] : 0);   // an empty middle contributes 0
+            } else {
+                dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[0][n - 1];
+}
+```
+
+This is **O(n²)** time and space. It also has a pleasing link to Day 78: a palindromic subsequence reads the same reversed, so the longest palindromic subsequence of `s` equals the **longest common subsequence of `s` and its reverse**.
+
+**Recognizing it:** the problem is about a substring or sub-range, shrinks from both ends, or combines two adjacent ranges (palindromes, matrix-chain products, "burst the balloons").
+
+## Choosing a pattern
+
+| If the problem says... | Think... | Seen in |
+|---|---|---|
+| a sequence where taking an item blocks its neighbor | linear take-or-skip, two rolling variables | House Robber, Day 92's stairs |
+| longest/best chain; each pick relates to an earlier pick | "best ending here", maybe tails + binary search | LIS |
+| exact total, capacity, or splitting into groups | reachable totals (knapsack family) | Day 77, partition |
+| two sequences compared | 2D table over prefixes | Day 78 (LCS, edit distance) |
+| rules about waiting, limited trades, modes | state machine, one best value per state | stock cooldown |
+| a range that shrinks from both ends | interval table `dp[i][j]` | palindromes |
+| a grid with moves in fixed directions | 2D table over cells | Day 92's paths |
+
+## Takeaways
+
+- Write the **state definition in words** first; most wrong DP solutions begin with a vague one.
+- Always ask *where the answer lives*. It was the last cell for House Robber, the maximum over all cells for LIS, a specific target cell for partition, and the corner `dp[0][n-1]` for intervals.
+- Check the **fill order** against the dependencies, and for 0/1 problems check the **loop direction** (Day 77).
+- Verify with a brute-force version on tiny inputs. For DP that is cheap (enumerate every subset or sequence) and catches off-by-one base cases that hand-checking misses.
