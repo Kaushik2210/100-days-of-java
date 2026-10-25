@@ -1,10 +1,25 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class LruCacheDemo {
+
+    static class SimpleLru<K, V> extends LinkedHashMap<K, V> {
+        private final int capacity;
+
+        SimpleLru(int capacity) {
+            super(16, 0.75f, true);
+            this.capacity = capacity;
+        }
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+            return size() > capacity;
+        }
+    }
 
     public static void main(String[] args) {
         LruCache cache = new LruCache(2);
@@ -51,6 +66,55 @@ public class LruCacheDemo {
         }
         System.out.println("O(1) cache vs a naive scan-everything LRU over " + trials + " random sessions (" + operations
             + " operations, " + evictions + " evictions): " + mismatches + " result mismatches");
+
+        int jdkMismatches = 0;
+        for (int t = 0; t < trials; t++) {
+            int capacity = 1 + random.nextInt(5);
+            SimpleLru<Integer, Integer> jdk = new SimpleLru<>(capacity);
+            NaiveLru slow = new NaiveLru(capacity);
+            for (int op = 0; op < 60; op++) {
+                int key = random.nextInt(8);
+                if (random.nextBoolean()) {
+                    int value = random.nextInt(100);
+                    jdk.put(key, value);
+                    slow.put(key, value);
+                } else {
+                    Integer a = jdk.get(key);
+                    Integer b = slow.get(key);
+                    if ((a == null) != (b == null) || (a != null && !a.equals(b))) jdkMismatches++;
+                }
+            }
+        }
+        System.out.println("LinkedHashMap version (access order + removeEldestEntry) vs the same naive reference: "
+            + jdkMismatches + " mismatches");
+
+        System.out.println();
+        int capacity = 1000;
+        int[] sizes = {10_000, 100_000, 400_000};
+        System.out.println("time per operation, three workload sizes (capacity " + capacity + ", mixed get/put on 2,000 distinct keys):");
+        for (int ops : sizes) {
+            int[] keys = new int[ops];
+            for (int i = 0; i < ops; i++) keys[i] = random.nextInt(2000);
+
+            LruCache fast = new LruCache(capacity);
+            long start = System.nanoTime();
+            for (int i = 0; i < ops; i++) {
+                if ((i & 1) == 0) fast.put(keys[i], i);
+                else fast.get(keys[i]);
+            }
+            long fastNanos = System.nanoTime() - start;
+
+            NaiveLru slow = new NaiveLru(capacity);
+            start = System.nanoTime();
+            for (int i = 0; i < ops; i++) {
+                if ((i & 1) == 0) slow.put(keys[i], i);
+                else slow.get(keys[i]);
+            }
+            long slowNanos = System.nanoTime() - start;
+            System.out.println("  " + ops + " operations: hash map + linked list " + fastNanos / ops + " ns/op, naive list " + slowNanos / ops + " ns/op");
+        }
+        System.out.println("(the earlier rows include JVM warm-up, so compare the last row: at steady state the naive version, which scans up to "
+            + capacity + " entries per operation, is far slower; the O(1) version's cost does not depend on capacity)");
     }
 }
 
