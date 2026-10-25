@@ -85,3 +85,42 @@ class LruCache {
 ```
 
 Two **sentinel** nodes (`head` and `tail`) that never hold data remove every edge case from linking: there is always a `prev` and a `next`, even for an empty list or a single entry.
+
+## The JDK already has this: `LinkedHashMap`
+
+`LinkedHashMap` (Day 25) is exactly a hash map whose entries are also threaded onto a doubly linked list. With the three-argument constructor it can order that list by **access** instead of insertion, and overriding `removeEldestEntry` evicts automatically:
+
+```java
+class SimpleLru<K, V> extends LinkedHashMap<K, V> {
+    private final int capacity;
+
+    SimpleLru(int capacity) {
+        super(16, 0.75f, true);            // true = access order: get() and put() move an entry to the end
+        this.capacity = capacity;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > capacity;          // called after each insertion; true means "drop the eldest"
+    }
+}
+```
+
+In production, this is usually what you would write. Building the version by hand is still worthwhile, because it is the same idea made visible, and it is a standard interview question precisely because it tests whether you can see *why* two structures are needed.
+
+## Complexity
+
+Every operation does a constant number of hash lookups and pointer updates, so `get` and `put` are both **O(1)** (hash operations assume few collisions, Day 67). Space is **O(capacity)**: one map entry and one list node per cached item.
+
+## Thread safety
+
+Neither version is safe for concurrent use. `get` *mutates* the recency list, so even a "read" changes shared state; two threads calling `get` at once can corrupt the links. The simplest correct fix is to make the public methods `synchronized` (Day 37), at the cost of serializing access. Day 40's `ConcurrentHashMap` doesn't help directly, because the hard part is keeping the *list* consistent with the map, not the map alone. High-performance caches (Caffeine, Guava) use more elaborate techniques to avoid a single global lock.
+
+## Design trade-offs worth knowing
+
+- **LRU is not always the right policy.** It handles recency well but a one-time scan of many items evicts everything useful ("cache pollution"). **LFU** (least *frequently* used) keeps popular items; **FIFO** is simplest but ignores usage; production caches often use hybrids.
+- **Capacity in entries vs bytes.** Counting entries assumes similar sizes. Real caches often weigh each entry by its size.
+- **Expiry.** Many caches also expire entries by age (a time-to-live), which needs extra bookkeeping beyond recency.
+- **Hit rate is the metric that matters.** A cache is only as good as the fraction of lookups it answers without going to the slower source.
+
+The pattern here, **compose structures so each covers the other's weakness**, recurs constantly: a priority queue plus a map for "update priority" (Dijkstra with decrease-key), a hash map plus an array for O(1) random removal, a trie plus failure links (Day 90's Aho-Corasick).
