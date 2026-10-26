@@ -101,3 +101,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 95 | 2026-10-23 | Problem-Solving Patterns: Trees & Graphs | [notes](./notes/day95-tree-and-graph-patterns.md) | [code](./src/day95/TreeGraphPatternsDemo.java) |
 | 96 | 2026-10-24 | Problem-Solving Patterns: Dynamic Programming | [notes](./notes/day96-dynamic-programming-patterns.md) | [code](./src/day96/DpPatternsDemo.java) |
 | 97 | 2026-10-25 | Designing Data Structures: Building an LRU Cache | [notes](./notes/day97-lru-cache.md) | [code](./src/day97/LruCacheDemo.java) |
+| 98 | 2026-10-26 | System Design Basics for Interviews | [notes](./notes/day98-system-design-basics.md) | [code](./src/day98/SystemDesignDemo.java) |
