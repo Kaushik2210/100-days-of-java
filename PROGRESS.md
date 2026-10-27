@@ -102,3 +102,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 96 | 2026-10-24 | Problem-Solving Patterns: Dynamic Programming | [notes](./notes/day96-dynamic-programming-patterns.md) | [code](./src/day96/DpPatternsDemo.java) |
 | 97 | 2026-10-25 | Designing Data Structures: Building an LRU Cache | [notes](./notes/day97-lru-cache.md) | [code](./src/day97/LruCacheDemo.java) |
 | 98 | 2026-10-26 | System Design Basics for Interviews | [notes](./notes/day98-system-design-basics.md) | [code](./src/day98/SystemDesignDemo.java) |
+| 99 | 2026-10-27 | Mock Coding Interview Practice & Complexity Tradeoffs | [notes](./notes/day99-mock-interview-and-tradeoffs.md) | [code](./src/day99/InterviewDemo.java) |
