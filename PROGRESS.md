@@ -103,3 +103,4 @@ Index of daily lessons. Roadmap: [`CURRICULUM.md`](./CURRICULUM.md). Each row li
 | 97 | 2026-10-25 | Designing Data Structures: Building an LRU Cache | [notes](./notes/day97-lru-cache.md) | [code](./src/day97/LruCacheDemo.java) |
 | 98 | 2026-10-26 | System Design Basics for Interviews | [notes](./notes/day98-system-design-basics.md) | [code](./src/day98/SystemDesignDemo.java) |
 | 99 | 2026-10-27 | Mock Coding Interview Practice & Complexity Tradeoffs | [notes](./notes/day99-mock-interview-and-tradeoffs.md) | [code](./src/day99/InterviewDemo.java) |
+| 100 | 2026-10-28 | Capstone Review: DSA Roadmap Retrospective | [notes](./notes/day100-dsa-roadmap-retrospective.md) | [code](./src/day100/CapstoneDemo.java) |
