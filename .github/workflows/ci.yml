@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  compile:
+    name: Compile every day (JDK ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [17, 21]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - name: Compile each day separately
+        run: |
+          fail=0
+          for dir in src/day*/; do
+            day=$(basename "$dir")
+            # Day 49 needs JUnit and Mockito on the classpath, so it is not compiled here.
+            [ "$day" = "day49" ] && continue
+            if ! javac -sourcepath src -d "out/$day" "$dir"*.java; then
+              echo "::error::$day failed to compile"
+              fail=1
+            fi
+          done
+          exit $fail
