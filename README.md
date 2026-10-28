@@ -4,6 +4,8 @@ My journey learning Java, one topic a day — starting from the absolute basics 
 
 I'm following a roadmap ([`CURRICULUM.md`](./CURRICULUM.md)) so nothing gets skipped, and writing a short lesson for myself every day so future-me can look back and remember *why* something works, not just that it does.
 
+**Status: complete.** All 100 days are done: Days 1 to 50 cover Java from the basics to the JVM, concurrency, patterns and tooling, and Days 51 to 100 cover data structures and algorithms. [Day 100](./notes/day100-dsa-roadmap-retrospective.md) is the retrospective.
+
 ## How it's organized
 
 Every day gets a matching pair of files, numbered so they stay in order and named after whatever I was learning that day:
